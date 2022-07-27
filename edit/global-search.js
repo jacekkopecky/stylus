@@ -53,8 +53,6 @@
     originalFocus: null,
 
     undoHistory: [],
-
-    searchInApplies: !editor.isUsercss,
   };
 
   //endregion
@@ -297,7 +295,6 @@
 
 
   function doSearchInApplies(cm, canAdvance) {
-    if (!state.searchInApplies) return;
     const inputs = editor.getSearchableInputs(cm);
     if (state.reverse) inputs.reverse();
     inputs.splice(0, inputs.indexOf(state.activeAppliesTo));
@@ -825,7 +822,7 @@
       }
       state.numFound = num;
     }
-    if (numApplies === undefined && state.searchInApplies && state.numApplies < 0) {
+    if (numApplies === undefined && state.numApplies < 0) {
       numApplies = 0;
       const elements = state.find ? document.getElementsByClassName(APPLIES_VALUE_CLASS) : [];
       const {rx} = state;

@@ -437,26 +437,6 @@ a:hover .svg-icon {
   display: none;
 }
 
-/* 'New style' links */
-#write-as {
-  position: absolute;
-  left: var(--outer-padding);
-}
-#newStyleAsUsercss {
-  position: static;
-}
-#newStyleAsUsercss ~ div {
-  font-weight: bold;
-  margin: -2px -1px 0;
-  padding-top: 1px;
-  text-align: center;
-  border-radius: 3px;
-}
-#newStyleAsUsercss:checked ~ div {
-  color: var(--bg);
-  background-color: var(--accent-2);
-}
-
 .write-style-link {
   margin-left: .6ex
 }

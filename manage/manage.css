@@ -90,26 +90,6 @@ a:hover {
   margin-bottom: .5rem;
 }
 
-#add-style-as-usercss-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-#add-style-as-usercss-wrapper:not(:hover) input:not(:checked) ~ a svg {
-  fill: var(--c65);
-}
-
-#add-style-as-usercss-wrapper input {
-  bottom: 0;
-  margin: auto;
-}
-
-#add-style-as-usercss-wrapper input + svg {
-  bottom: 0;
-  margin: auto;
-  left: 2px;
-}
-
 #injection-order-button {
   --w: 16px;
   width: var(--w);
@@ -214,8 +194,7 @@ a:hover {
   display: none;
 }
 
-.oldUI .disabled h2::after,
-.entry.usercss .style-name-link::after {
+.oldUI .disabled h2::after {
   font-size: 11px;
   border-radius: 4px;
   margin-left: 1ex;
@@ -233,11 +212,6 @@ a:hover {
   padding: 2px 5px 3px;
   vertical-align: middle;
 }
-.oldUI .entry.usercss .style-name-link::after {
-  content: "usercss";
-  font-weight: normal;
-  vertical-align: middle;
-}
 
 .disabled h2 .style-name-link,
 .disabled .applies-to,
@@ -246,9 +220,6 @@ a:hover {
   fill: var(--c80);
   font-weight: normal;
   transition: color .5s .1s, fill .5s .1s;
-}
-.disabled.usercss .style-name-link::after {
-  background-color: hsla(180, 35%, 50%, .2);
 }
 
 .disabled:hover .actions {

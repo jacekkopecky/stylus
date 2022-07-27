@@ -42,7 +42,6 @@
     </p>
   </template>
 
-  <script src="options/options-sync.js"></script>
   <script src="js/dark-themer.js"></script> <!-- must be last in HEAD to avoid FOUC -->
 </head>
 
@@ -61,59 +60,6 @@
   <div id="options">
 
     <div class="options-wrapper">
-
-      <div class="block" id="updates">
-        <h1 i18n="optionsCustomizeUpdate"></h1>
-        <div class="items">
-          <label>
-            <span i18n="optionsUpdateInterval">
-              <a i18n="title:optionsUpdateImportNote"
-                 data-cmd="note" class="svg-inline-wrapper" tabindex="0">
-                <svg class="svg-icon info"><use xlink:href="#svg-icon-help"/></svg>
-              </a>
-            </span>
-            <input type="number" min="0" id="updateInterval">
-          </label>
-        </div>
-      </div>
-
-      <div class="block sync-options">
-        <h1 i18n="optionsCustomizeSync"></h1>
-        <div class="items">
-          <label>
-            <span class="sync-status"></span>
-            <div class="select-resizer">
-              <select class="cloud-name">
-                <option value="none" i18n="optionsSyncNone"></option>
-                <option value="dropbox">Dropbox</option>
-                <option value="google">Google Drive</option>
-                <option value="onedrive">OneDrive</option>
-                <option value="webdav">WebDAV</option>
-              </select>
-              <svg class="svg-icon select-arrow"><use xlink:href="#svg-icon-select-arrow"/></svg>
-            </div>
-          </label>
-          <table class="drive-options" data-drive="webdav">
-            <tr>
-              <td i18n="optionsSyncUrl"></td>
-              <td><input type="url" data-option="url"></td>
-            </tr>
-            <tr>
-              <td i18n="optionsSyncUsername"></td>
-              <td><input type="text" data-option="username"></td>
-            </tr>
-            <tr>
-              <td i18n="optionsSyncPassword"></td>
-              <td><input type="password" data-option="password"></td>
-            </tr>
-          </table>
-          <div class="actions">
-            <button class="connect"></button>
-            <button class="sync-now" i18n="optionsSyncSyncNow"></button>
-            <button class="sync-login" i18n="optionsSyncLogin"></button>
-          </div>
-        </div>
-      </div>
 
       <div class="block">
         <h1 i18n="stylePreferSchemeLabel"></h1>
@@ -333,11 +279,6 @@
             </span>
           </label>
         </div>
-      </div>
-
-      <div class="block">
-        <h1 i18n="cm_theme"></h1>
-        <div class="items" i18n="optionsStylusThemes" style="width:0"></div>
       </div>
     </div>
 

@@ -1,7 +1,7 @@
 /* global $ $create $remove messageBoxProxy */// dom.js
 /* global API */// msg.js
 /* global CodeMirror */
-/* global RX_META debounce */// toolbox.js
+/* global debounce */// toolbox.js
 /* global MozDocMapper clipString helpPopup rerouteHotkeys showCodeMirrorPopup */// util.js
 /* global createSection */// sections-editor-section.js
 /* global editor */
@@ -366,33 +366,20 @@ function SectionsEditor() {
       lockPageUI(true);
       try {
         const code = popup.codebox.getValue().trim();
-        if (!RX_META.test(code) ||
-            !await getPreprocessor(code) ||
-            await messageBoxProxy.confirm(
-              t('importPreprocessor'), 'pre-line',
-              t('importPreprocessorTitle'))
-        ) {
-          const {sections, errors} = await API.worker.parseMozFormat({code});
-          if (!sections.length || errors.some(e => !e.recoverable)) {
-            await Promise.reject(errors);
-          }
-          await initSections(sections, {
-            replace: replaceOldStyle,
-            focusOn: replaceOldStyle ? 0 : false,
-            keepDirty: true,
-          });
-          helpPopup.close();
+        const {sections, errors} = await API.worker.parseMozFormat({code});
+        if (!sections.length || errors.some(e => !e.recoverable)) {
+          await Promise.reject(errors);
         }
+        await initSections(sections, {
+          replace: replaceOldStyle,
+          focusOn: replaceOldStyle ? 0 : false,
+          keepDirty: true,
+        });
+        helpPopup.close();
       } catch (err) {
         showError(err);
       }
       lockPageUI(false);
-    }
-
-    async function getPreprocessor(code) {
-      try {
-        return (await API.usercss.buildMeta({sourceCode: code})).usercssData.preprocessor;
-      } catch (e) {}
     }
 
     function lockPageUI(locked) {

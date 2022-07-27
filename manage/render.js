@@ -1,6 +1,6 @@
 /* global $$ $ $create animateElement scrollElementIntoView */// dom.js
 /* global API */// msg.js
-/* global URLS debounce getOwnTab isEmptyObj sessionStore stringAsRegExp */// toolbox.js
+/* global URLS debounce getOwnTab sessionStore stringAsRegExp */// toolbox.js
 /* global filterAndAppend */// filters.js
 /* global installed newUI */// manage.js
 /* global prefs */
@@ -93,30 +93,22 @@ function createStyleElement({style, name: nameLC}) {
         regexpsBefore: '/',
         regexpsAfter: '/',
       },
-      oldConfigure: !newUI.enabled && $('.configure-usercss', entry),
       oldCheckUpdate: !newUI.enabled && $('.check-update', entry),
       oldUpdate: !newUI.enabled && $('.update', entry),
     };
   }
   const parts = elementParts;
-  const ud = style.usercssData;
-  const configurable = ud && ud.vars && !isEmptyObj(ud.vars);
   const name = style.customName || style.name;
   parts.checker.checked = style.enabled;
   parts.nameLink.firstChild.textContent = t.breakWord(name);
   parts.nameLink.href = parts.editLink.href = parts.editHrefBase + style.id;
   parts.homepage.href = parts.homepage.title = style.url || '';
-  parts.infoVer.textContent = ud ? ud.version : '';
-  parts.infoVer.dataset.value = ud ? ud.version : '';
-  if (URLS.extractUsoArchiveId(style.updateUrl)) {
-    parts.infoVer.dataset.isDate = '';
-  } else {
-    delete parts.infoVer.dataset.isDate;
-  }
+  parts.infoVer.textContent = '';
+  parts.infoVer.dataset.value = '';
+  delete parts.infoVer.dataset.isDate;
   if (newUI.enabled) {
     createAgeText(parts.infoAge, style);
   } else {
-    parts.oldConfigure.classList.toggle('hidden', !configurable);
     parts.oldCheckUpdate.classList.toggle('hidden', !style.updateUrl);
     parts.oldUpdate.classList.toggle('hidden', !style.updateUrl);
   }
@@ -133,17 +125,13 @@ function createStyleElement({style, name: nameLC}) {
   entry.styleMeta = style;
   entry.className = parts.entryClassBase + ' ' +
     (style.enabled ? 'enabled' : 'disabled') +
-    (style.updateUrl ? ' updatable' : '') +
-    (ud ? ' usercss' : '');
+    (style.updateUrl ? ' updatable' : '');
 
   if (style.url) {
     $('.homepage', entry).appendChild(parts.homepageIcon.cloneNode(true));
   }
   if (style.updateUrl && newUI.enabled) {
     $('.actions', entry).appendChild(t.template.updaterIcons.cloneNode(true));
-  }
-  if (configurable && newUI.enabled) {
-    $('.actions', entry).appendChild(t.template.configureIcon.cloneNode(true));
   }
 
   createTargetsElement({entry, style});

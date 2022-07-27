@@ -17,11 +17,6 @@ const sorter = (() => {
       parse: ({name}) => name,
       sorter: sorterType.alpha,
     },
-    usercss: {
-      text: 'Usercss',
-      parse: ({style}) => style.usercssData ? 0 : 1,
-      sorter: sorterType.number,
-    },
     disabled: {
       text: '', // added as either "enabled" or "disabled" by the addOptions function
       parse: ({style}) => style.enabled ? 1 : 0,
@@ -48,17 +43,11 @@ const sorter = (() => {
     'dateInstalled,asc, title,asc',
     'dateUpdated,desc, title,asc',
     'dateUpdated,asc, title,asc',
-    'usercss,asc, title,asc',
-    'usercss,desc, title,asc',
     'disabled,asc, title,asc',
     'disabled,desc, title,asc',
-    'disabled,desc, usercss,asc, title,asc',
     '{groupDesc}',
     'title,desc',
-    'usercss,asc, title,desc',
-    'usercss,desc, title,desc',
     'disabled,desc, title,desc',
-    'disabled,desc, usercss,asc, title,desc',
   ];
   const splitRegex = /\s*,\s*/;
   const ID = 'manage.newUI.sort';

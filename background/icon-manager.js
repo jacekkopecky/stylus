@@ -139,6 +139,8 @@ const iconMan = (() => {
     return allIds.size || '';
   }
 
+  // the fetch() below is only used for local resources, won't go to the network
+
   // Caches imageData for icon paths
   async function loadImage(url) {
     const {OffscreenCanvas} = !FIREFOX && self.createImageBitmap && self || {};

@@ -71,16 +71,9 @@ html:not(.is-new-style) #heading::before {
 #popup-button:hover {
   filter: drop-shadow(0 0 3px hsl(180, 70%, 50%));
 }
-.usercss:not(.compact-layout) #popup-button {
-  right: 24px;
-}
 /************ checkbox & select************/
 .options-column > div[class="option"] {
   margin-bottom: 4px;
-}
-
-.options-column > .usercss-only {
-  margin-bottom: .75rem;
 }
 
 label {
@@ -361,12 +354,6 @@ label {
   padding: .1rem .25rem 0 0;
   vertical-align: middle;
 }
-/* footer */
-.usercss #footer {
-  display: block;
-  margin-top: 1em;
-  margin-bottom: .5em;
-}
 #lint:not([open]) + #footer {
   margin-top: 4em;
 }
@@ -415,14 +402,6 @@ label {
   counter-increment: codebox;
   content: counter(codebox) ": " attr(data-text);
   margin-left: 0.25rem;
-}
-.usercss .applies-to {
-  border-width: 1px 0;
-}
-.usercss .applies-to > label::before {
-  content: attr(data-index) ":";
-  margin-right: 0.25rem;
-  font-size: 12px;
 }
 .code-label[data-text] {
   font-weight: bold;
@@ -927,15 +906,6 @@ label {
 }
 
 /************ single editor **************/
-.usercss .CodeMirror-focused {
-  box-shadow: none;
-}
-
-.sectioned .usercss-only,
-.usercss .sectioned-only {
-  display: none !important; /* hide during page init */
-}
-
 #options:not([open]) + #lint {
   margin-top: 0;
 }
@@ -1006,11 +976,6 @@ label {
   .sectioned body {
     height: 100%;
   }
-  .usercss body {
-    display: flex;
-    flex-direction: column;
-  }
-  .usercss #header,
   #header:not(.sticky) {
     position: static;
   }

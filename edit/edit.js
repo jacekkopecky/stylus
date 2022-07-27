@@ -2,7 +2,6 @@
 /* global API msg */// msg.js
 /* global CodeMirror */
 /* global SectionsEditor */
-/* global SourceEditor */
 /* global clipString createHotkeyInput helpPopup */// util.js
 /* global closeCurrentTab deepEqual sessionStore tryJSONparse */// toolbox.js
 /* global cmFactory */
@@ -20,13 +19,13 @@ EditorMethods();
 editor.styleReady.then(async () => {
   EditorHeader();
   dispatchEvent(new Event('domReady'));
-  await (editor.isUsercss ? SourceEditor : SectionsEditor)();
+  await SectionsEditor();
 
   editor.dirty.onChange(editor.updateDirty);
   prefs.subscribe('editor.linter', () => linterMan.run());
 
   // enabling after init to prevent flash of validation failure on an empty name
-  $('#name').required = !editor.isUsercss;
+  $('#name').required = true;
   $('#save-button').onclick = editor.save;
   $('#cancel-button').onclick = editor.cancel;
 
@@ -59,7 +58,6 @@ editor.styleReady.then(async () => {
 
 editor.styleReady.then(async () => {
   // Set up mini-header on scroll
-  const {isUsercss} = editor;
   const el = $create({
     style: `
       top: 0;
@@ -68,9 +66,8 @@ editor.styleReady.then(async () => {
       visibility: hidden;
     `.replace(/;/g, '!important;'),
   });
-  const scroller = isUsercss ? $('.CodeMirror-scroll') : document.body;
-  const xoRoot = isUsercss ? scroller : undefined;
-  const xo = new IntersectionObserver(onScrolled, {root: xoRoot});
+  const scroller = document.body;
+  const xo = new IntersectionObserver(onScrolled);
   scroller.appendChild(el);
   onCompactToggled(editor.mqCompact);
   editor.mqCompact.on('change', onCompactToggled);
@@ -90,7 +87,7 @@ editor.styleReady.then(async () => {
   function onScrolled(entries) {
     const h = $('#header');
     const sticky = !entries.pop().isIntersecting;
-    if (!isUsercss) scroller.style.paddingTop = sticky ? h.offsetHeight + 'px' : '';
+    scroller.style.paddingTop = sticky ? h.offsetHeight + 'px' : '';
     h.classList.toggle('sticky', sticky);
   }
 });

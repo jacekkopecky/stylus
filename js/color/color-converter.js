@@ -68,7 +68,7 @@ const colorConverter = (() => {
     // NAMED_COLORS is added below
   };
 
-  function format(color = '', type = color.type, {hexUppercase, usoMode, round} = {}) {
+  function format(color = '', type = color.type, {hexUppercase, round} = {}) {
     if (!color || !type) return typeof color === 'string' ? color : '';
     const {a, type: src = guessType(color)} = color;
     const aFmt = formatAlpha(a);
@@ -81,12 +81,12 @@ const colorConverter = (() => {
     switch (type) {
       case 'hex': {
         let res = '#' + hex2(r) + hex2(g) + hex2(b) + (aStr ? hex2(Math.round(a * 255)) : '');
-        if (!usoMode) res = res.replace(/^#(.)\1(.)\2(.)\3(?:(.)\4)?$/, '#$1$2$3$4');
+        res = res.replace(/^#(.)\1(.)\2(.)\3(?:(.)\4)?$/, '#$1$2$3$4');
         return hexUppercase ? res.toUpperCase() : res;
       }
       case 'rgb': {
         const rgb = [r, g, b].map(Math.round).join(', ');
-        return usoMode ? rgb : `rgb${aStr ? 'a' : ''}(${rgb}${aStr})`;
+        return `rgb${aStr ? 'a' : ''}(${rgb}${aStr})`;
       }
       case 'hsl':
         return `hsl${aStr ? 'a' : ''}(${round(h)}, ${round(s)}%, ${round(l)}%${aStr})`;

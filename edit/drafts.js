@@ -13,7 +13,7 @@
   connectPort();
 
   const draft = await API.drafts.get(makeId());
-  if (draft && draft.isUsercss === editor.isUsercss) {
+  if (draft) {
     const date = makeRelativeDate(draft.date);
     if (await messageBoxProxy.confirm(t('draftAction'), 'danger', t('draftTitle', date))) {
       await editor.replaceStyle(draft.style, draft);
@@ -60,7 +60,6 @@
     if (!isDirty) return;
     API.drafts.put({
       date: Date.now(),
-      isUsercss: editor.isUsercss,
       style: editor.getValue(true),
       si: editor.makeScrollInfo(),
     }, makeId());

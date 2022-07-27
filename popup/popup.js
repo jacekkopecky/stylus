@@ -1,4 +1,4 @@
-/* global $ $$ $create getEventKeyName setupLivePrefs */// dom.js
+/* global $ $$ $create setupLivePrefs */// dom.js
 /* global ABOUT_BLANK getStyleDataMerged preinit */// preinit.js
 /* global API msg */// msg.js
 /* global Events */
@@ -12,7 +12,6 @@
   capitalize
   clamp
   getActiveTab
-  isEmptyObj
 */// toolbox.js
 'use strict';
 
@@ -84,32 +83,6 @@ function toggleSideBorders(_key, state) {
 async function initPopup(frames) {
   prefs.subscribe('popupWidth', setPopupWidth, {runNow: true});
   setupLivePrefs();
-
-  const elFind = $('#find-styles-btn');
-  const elFindDeps = async () => {
-    if (!t.template.searchUI) {
-      document.body.append(await t.fetchTemplate('/popup/search.html', 'searchUI'));
-    }
-    await require([
-      '/popup/search.css',
-      '/popup/search',
-    ]);
-  };
-  elFind.on('click', async () => {
-    elFind.disabled = true;
-    await elFindDeps();
-    Events.searchInline();
-  });
-  elFind.on('split-btn', async e => {
-    await elFindDeps();
-    Events.searchSite(e);
-  });
-  window.on('keydown', e => {
-    if (getEventKeyName(e) === 'Ctrl-F') {
-      e.preventDefault();
-      elFind.click();
-    }
-  });
 
   Object.assign($('#popup-manage-button'), {
     onclick: Events.openManager,
@@ -323,7 +296,6 @@ function createStyleElement(style) {
     Object.assign(entry, {
       id: ENTRY_ID_PREFIX_RAW + style.id,
       styleId: style.id,
-      styleIsUsercss: Boolean(style.usercssData),
       onmousedown: Events.maybeEdit,
       styleMeta: style,
     });
@@ -339,22 +311,6 @@ function createStyleElement(style) {
       onclick: Events.name,
     });
     styleName.appendChild(document.createTextNode(' '));
-
-    const config = $('.configure', entry);
-    config.onclick = Events.configure;
-    if (!style.usercssData) {
-      if (style.updateUrl && style.updateUrl.includes('?') && style.url) {
-        config.href = style.url;
-        config.target = '_blank';
-        config.title = t('configureStyleOnHomepage');
-        config._sendMessage = {method: 'openSettings'};
-        $('use', config).attributes['xlink:href'].nodeValue = '#svg-icon-config-uso';
-      } else {
-        config.classList.add('hidden');
-      }
-    } else if (isEmptyObj(style.usercssData.vars)) {
-      config.classList.add('hidden');
-    }
 
     $('.delete', entry).onclick = Events.delete;
 

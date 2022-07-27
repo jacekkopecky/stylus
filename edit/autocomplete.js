@@ -1,7 +1,6 @@
 /* global CodeMirror */
 /* global cmFactory */
 /* global debounce */// toolbox.js
-/* global editor */
 /* global linterMan */
 /* global prefs */
 'use strict';
@@ -9,16 +8,11 @@
 /* Registers 'hint' helper and 'autocompleteOnTyping' option in CodeMirror */
 
 (() => {
-  const USO_VAR = 'uso-variable';
-  const USO_VALID_VAR = 'variable-3 ' + USO_VAR;
-  const USO_INVALID_VAR = 'error ' + USO_VAR;
   const rxPROP = /^(prop(erty)?|variable-2)\b/;
   const rxVAR = /(^|[^-.\w\u0080-\uFFFF])var\(/iyu;
   const rxCONSUME = /([-\w]*\s*:\s?)?/yu;
   const cssMime = CodeMirror.mimeModes['text/css'];
   const docFuncs = addSuffix(cssMime.documentTypes, '(');
-  const {tokenHooks} = cssMime;
-  const originalCommentHook = tokenHooks['/'];
   const originalHelper = CodeMirror.hint.css || (() => {});
   let cssMedia, cssProps, cssValues;
 
@@ -33,8 +27,6 @@
 
   CodeMirror.registerHelper('hint', 'css', helper);
   CodeMirror.registerHelper('hint', 'stylus', helper);
-
-  tokenHooks['/'] = tokenizeUsoVariables;
 
   async function helper(cm) {
     const pos = cm.getCursor();
@@ -101,16 +93,6 @@
           leftLC = left.slice(1);
         } else {
           leftLC = left;
-        }
-        break;
-
-      case '/': // USO vars
-        if (str.startsWith('/*[[') && str.endsWith(']]*/')) {
-          prev += 4;
-          end -= 4;
-          end -= text.slice(end - 4, end) === '-rgb' ? 4 : 0;
-          list = Object.keys((editor.style.usercssData || {}).vars || {}).sort();
-          leftLC = left.slice(4);
         }
         break;
 
@@ -191,8 +173,7 @@
 
   /** makes sure we don't process a different adjacent comment */
   function isSameToken(text, style, i) {
-    return !style || text[i] !== '/' && text[i + 1] !== '*' ||
-      !style.startsWith(USO_VALID_VAR) && !style.startsWith(USO_INVALID_VAR);
+    return !style || text[i] !== '/' && text[i + 1] !== '*';
   }
 
   function findAllCssVars(cm, leftPart) {
@@ -210,22 +191,6 @@
       }
     });
     return [...list].sort();
-  }
-
-  function tokenizeUsoVariables(stream) {
-    const token = originalCommentHook.apply(this, arguments);
-    if (token[1] === 'comment') {
-      const {string, start, pos} = stream;
-      if (testAt(/\/\*\[\[/y, start, string) &&
-          testAt(/]]\*\//y, pos - 4, string)) {
-        const vars = (editor.style.usercssData || {}).vars;
-        token[0] =
-          vars && vars.hasOwnProperty(string.slice(start + 4, pos - 4).replace(/-rgb$/, ''))
-            ? USO_VALID_VAR
-            : USO_INVALID_VAR;
-      }
-    }
-    return token;
   }
 
   function execAt(rx, index, text) {

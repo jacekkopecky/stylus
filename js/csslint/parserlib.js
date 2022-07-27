@@ -1322,7 +1322,6 @@ self.parserlib = (() => {
     SEMICOLON: {text: ';'},
     SLASH: {text: '/'},
     STAR: {text: '*'},
-    USO_VAR: {},
   });
   // make Tokens an array of tokens, store the index in original prop, add 'name' to each token
   const typeMap = new Map();
@@ -1378,7 +1377,6 @@ self.parserlib = (() => {
     identString: [
       Tokens.IDENT,
       Tokens.STRING,
-      Tokens.USO_VAR,
     ],
     LParenBracket: [
       Tokens.LPAREN,
@@ -1439,7 +1437,6 @@ self.parserlib = (() => {
     stringUri: [
       Tokens.STRING,
       Tokens.URI,
-      Tokens.USO_VAR,
     ],
     term: [
       Tokens.NUMBER,
@@ -1453,11 +1450,6 @@ self.parserlib = (() => {
       Tokens.IDENT,
       Tokens.URI,
       Tokens.UNICODE_RANGE,
-      Tokens.USO_VAR,
-    ],
-    usoS: [
-      Tokens.USO_VAR,
-      Tokens.S,
     ],
   };
 
@@ -2307,9 +2299,6 @@ self.parserlib = (() => {
           this.name = token.name;
           this.uri = token.uri;
           break;
-        case Tokens.USO_VAR:
-          this._isVar = true;
-          break;
         default:
           if (value === ',' || value === '/') {
             this.type = 'operator';
@@ -2697,17 +2686,15 @@ self.parserlib = (() => {
 
     /**
      * @param {Boolean} [skipWS] - skip whitespace too
-     * @param {Boolean} [skipUsoVar] - skip USO_VAR too
      */
-    skipComment(skipWS, skipUsoVar) {
+    skipComment(skipWS) {
       const tt = this.LT(1, true).type;
       if (skipWS && tt === Tokens.S ||
-          skipUsoVar && tt === Tokens.USO_VAR ||
           tt === Tokens.COMMENT ||
           tt == null && this._ltIndex === this._ltAhead && (
             skipWS && this._reader.readMatch(/\s+/y),
             this._reader.peekTest(/\/\*/y))) {
-        while (this.match(skipUsoVar ? TT.usoS : Tokens.S)) { /*NOP*/ }
+        while (this.match(Tokens.S)) { /*NOP*/ }
       }
     }
 
@@ -2756,10 +2743,7 @@ self.parserlib = (() => {
           return tok;
         case '/':
           if (b === '*') {
-            const str = tok.value = this.readComment(a);
-            tok.type = str.startsWith('/*[[') && str.endsWith(']]*/')
-              ? Tokens.USO_VAR
-              : Tokens.COMMENT;
+            tok.type = Tokens.COMMENT;
           } else {
             tok.type = Tokens.SLASH;
           }
@@ -4489,17 +4473,16 @@ self.parserlib = (() => {
       }
     }
 
-    _ws(start, skipUsoVar) {
+    _ws(start) {
       const tt = start && start.type;
       if (tt && !(
         tt === Tokens.S ||
-        tt === Tokens.COMMENT ||
-        tt === Tokens.USO_VAR && skipUsoVar
+        tt === Tokens.COMMENT
       )) {
         return '';
       }
       const stream = this._tokenStream;
-      const tokens = skipUsoVar ? TT.usoS : Tokens.S;
+      const tokens = Tokens.S;
       let ws = start ? start.value : '';
       for (let t; (t = stream.LT(1, true)) && t.type === Tokens.S;) {
         ws += stream.get(true).value;

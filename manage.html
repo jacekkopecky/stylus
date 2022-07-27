@@ -30,7 +30,6 @@
         <button class="delete" i18n="deleteStyleLabel"></button>
         <button class="check-update" i18n="checkForUpdate"></button>
         <button class="update" i18n="installUpdate"></button>
-        <button class="configure-usercss" i18n="configureStyle"></button>
         <span class="update-note"></span>
       </p>
     </div>
@@ -78,12 +77,6 @@
     <svg class="svg-icon" viewBox="0 0 20 20">
       <path d="M4,4h5v2H6v8h8v-3h2v5H4V4z M11,3h6v6l-2-2l-4,4L9,9l4-4L11,3z"/>
     </svg>
-  </template>
-
-  <template data-id="configureIcon">
-    <a class="configure-usercss" i18n="title:configureStyle" tabindex="0">
-      <svg class="svg-icon config"><use xlink:href="#svg-icon-config"></use></svg>
-    </a>
   </template>
 
   <template data-id="updaterIcons">
@@ -213,24 +206,6 @@
           </div>
         </div>
 
-        <div class="filter-selection">
-          <label>
-            <div class="checkmate">
-              <input id="manage.onlyUsercss" type="checkbox"
-                     data-filter=".usercss"
-                     data-filter-hide=":not(.usercss)">
-              <svg class="svg-icon checked"><use xlink:href="#svg-icon-checked"/></svg>
-            </div>
-          </label>
-          <div class="select-resizer">
-            <select id="manage.onlyUsercss.invert" class="fit-width">
-              <option i18n="manageOnlyUsercss" value="false"></option>
-              <option i18n="manageOnlyNonUsercss" value="true"></option>
-            </select>
-            <svg class="svg-icon select-arrow"><use xlink:href="#svg-icon-select-arrow"/></svg>
-          </div>
-        </div>
-
         <label id="only-updates" class="hidden">
           <input type="checkbox"
                  data-filter=".can-update, .update-problem, .update-done"
@@ -297,18 +272,6 @@
           <a href="edit.html">
             <button id="add-style-label" i18n="addStyleLabel" tabindex="-1"></button>
           </a>
-          <label id="add-style-as-usercss-wrapper">
-            <input type="checkbox" id="newStyleAsUsercss">
-            <svg class="svg-icon checked"><use xlink:href="#svg-icon-checked"/></svg>
-            <span i18n="manageNewStyleAsUsercss, title:optionsAdvancedNewStyleAsUsercss"></span>
-            <a id="usercss-wiki"
-               href="https://github.com/openstyles/stylus/wiki/Usercss"
-               i18n="title:externalUsercssDocument">
-              <svg class="svg-icon" viewBox="0 0 20 20">
-                <path d="M4,4h5v2H6v8h8v-3h2v5H4V4z M11,3h6v6l-2-2l-4,4L9,9l4-4L11,3z"/>
-              </svg>
-            </a>
-          </label>
         </div>
         <button id="manage-options-button" i18n="openOptions"></button>
         <button id="injection-order-button" i18n="title:styleInjectionOrder">
@@ -338,21 +301,8 @@
       </details>
 
       <div id="manage-text">
-        <span>
-          <a href="https://userstyles.world/explore" target="_blank" i18n="linkGetShareStyles"></a>
-          <a tabindex="0" i18n="title:linkGetShareStylesInfo" data-cmd="note">
-            <svg class="svg-icon info"><use xlink:href="#svg-icon-help"/></svg>
-          </a>
-        </span>
-        <span>
-          <a href="https://uso.kkx.one/browse/styles" target="_blank" i18n="linkGetStyles"></a>
-          <a tabindex="0" i18n="title:linkGetStylesInfo" data-cmd="note">
-            <svg class="svg-icon info"><use xlink:href="#svg-icon-help"/></svg>
-          </a>
-        </span>
         <span><a href="https://add0n.com/stylus.html#features" target="_blank" i18n="linkGetHelp"></a></span>
         <span><a href="https://github.com/openstyles/stylus/wiki" target="_blank" i18n="linkStylusWiki"></a></span>
-        <span><a href="https://www.transifex.com/github-7/Stylus" target="_blank" i18n="linkTranslate"></a></span>
       </div>
     </div>
   </div>

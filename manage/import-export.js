@@ -1,5 +1,5 @@
 /* global API */// msg.js
-/* global RX_META deepEqual isEmptyObj tryJSONparse */// toolbox.js
+/* global deepEqual isEmptyObj tryJSONparse */// toolbox.js
 /* global changeQueue */// manage.js
 /* global chromeSync */// storage-util.js
 /* global prefs */
@@ -86,12 +86,7 @@ function importFromFile({fileTypeFilter, file} = {}) {
         fReader.onloadend = event => {
           fileInput.remove();
           const text = event.target.result;
-          const maybeUsercss = !/^\s*\[/.test(text) && RX_META.test(text);
-          if (maybeUsercss) {
-            messageBoxProxy.alert(t('dragDropUsercssTabstrip'));
-          } else {
-            importFromString(text).then(resolve);
-          }
+          importFromString(text).then(resolve);
         };
         fReader.readAsText(file, 'utf-8');
       }
@@ -135,9 +130,7 @@ async function importFromString(jsonString) {
     if (
       !item ||
       typeof item !== 'object' || (
-        isEmptyObj(item.usercssData)
-          ? !styleJSONseemsValid(item)
-          : typeof item.sourceCode !== 'string'
+        !styleJSONseemsValid(item)
       )
     ) {
       stats.invalid.names.push(`#${index}: ${limitString(item && item.name || '')}`);
@@ -191,11 +184,7 @@ async function importFromString(jsonString) {
   }
 
   function sameCode(oldStyle, newStyle) {
-    const d1 = oldStyle.usercssData;
-    const d2 = newStyle.usercssData;
-    return !d1 + !d2
-      ? styleSectionsEqual(oldStyle, newStyle)
-      : oldStyle.sourceCode === newStyle.sourceCode && deepEqual(d1.vars, d2.vars);
+    return styleSectionsEqual(oldStyle, newStyle);
   }
 
   function sameStyle(oldStyle, newStyle) {
@@ -350,7 +339,6 @@ async function importFromString(jsonString) {
 async function exportToFile(e) {
   e.preventDefault();
   await require(['/js/storage-util']);
-  const keepDupSections = e.type === 'contextmenu' || e.shiftKey || e.detail === 'compat';
   const data = [
     Object.assign({
       [prefs.STORAGE_KEY]: prefs.values,
@@ -368,12 +356,8 @@ async function exportToFile(e) {
   /** strip `sections`, `null` and empty objects */
   function cleanupStyle(style) {
     const copy = {};
-    for (let [key, val] of Object.entries(style)) {
-      if (key === 'sections'
-        // Keeping dummy `sections` for compatibility with older Stylus
-        // even in deduped backup so the user can resave/reconfigure the style to rebuild it.
-          ? !style.usercssData || keepDupSections || (val = [{code: ''}])
-          : typeof val !== 'object' || !isEmptyObj(val)) {
+    for (const [key, val] of Object.entries(style)) {
+      if (key === 'sections' || typeof val !== 'object' || !isEmptyObj(val)) {
         copy[key] = val;
       }
     }

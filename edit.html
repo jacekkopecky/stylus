@@ -59,10 +59,8 @@
     <script src="edit/moz-section-widget.js"></script>
     <script src="edit/linter-manager.js"></script>
     <script src="edit/beautify.js"></script>
-    <script src="edit/source-editor.js"></script>
     <script src="edit/sections-editor-section.js"></script>
     <script src="edit/sections-editor.js"></script>
-    <script src="edit/usw-integration.js"></script>
 
     <template data-id="appliesTo">
       <li class="applies-to-item">
@@ -243,11 +241,6 @@
   <template data-id="body"> <!-- https://crbug.com/1288447 -->
     <div id="header">
       <h1 id="heading" i18n="data-edit:editStyleHeading, data-add:addStyleTitle">
-        <a class="usercss-only"
-           href="https://github.com/openstyles/stylus/wiki/Usercss"
-           i18n="title:externalUsercssDocument" target="_blank">
-          <svg class="svg-icon info"><use xlink:href="#svg-icon-help"/></svg>
-        </a>
       </h1>
       <section id="basic-info">
         <div id="basic-info-name">
@@ -282,7 +275,7 @@
         <div class="buttons">
           <div class="split-btn">
             <button id="save-button" i18n="styleSaveLabel" data-hotkey-tooltip="save" disabled></button
-            ><button class="split-btn-pedal usercss-only" i18n="menu-tpl:saveAsTemplate"></button>
+            >
           </div>
           <button id="beautify" i18n="styleBeautify"></button>
           <button id="style-settings-btn" i18n="settings"></button>
@@ -347,12 +340,6 @@
                   <svg class="svg-icon settings"><use xlink:href="#svg-icon-config"/></svg>
                 </a>
               </div>
-              <div class="option usercss-only">
-                <label i18n="appliesLineWidgetLabel, title:appliesLineWidgetWarning">
-                  <input id="editor.appliesToLineWidget" type="checkbox">
-                  <svg class="svg-icon checked"><use xlink:href="#svg-icon-checked"/></svg>
-                </label>
-              </div>
             </div>
             <div class="options-column">
               <div class="option aligned">
@@ -404,22 +391,6 @@
             </div>
           </div>
         </details>
-        <details id="publish" data-pref="editor.publish.expanded" class="ignore-pref-if-compact">
-          <summary><h2 i18n="publish"></h2></summary>
-          <div>
-            <a id="usw-url" href="https://userstyles.world" target="_blank">&nbsp;</a>
-            <div id="usw-link-info">
-              <dl><dt i18n="styleName"></dt><dd data-usw="name"></dd></dl>
-              <dl><dt i18n="genericDescription"></dt><dd data-usw="description"></dd></dl>
-            </div>
-            <div>
-              <button id="usw-publish-style"
-                      i18n="data-publish:publishStyle, data-push:publishPush"></button>
-              <button id="usw-disconnect" i18n="optionsSyncDisconnect"></button>
-              <span id="usw-progress"></span>
-            </div>
-          </div>
-        </details>
         <details id="sections-list" data-pref="editor.toc.expanded" class="ignore-pref-if-compact">
           <summary><h2 i18n="sections"></h2></summary>
           <ol id="toc"></ol>
@@ -436,11 +407,6 @@
         </details>
       </div>
       <div id="header-resizer" i18n="title:headerResizerHint"></div>
-      <div id="footer" class="hidden">
-        <a href="https://github.com/openstyles/stylus/wiki/Usercss"
-           i18n="externalUsercssDocument"
-           target="_blank"></a>
-      </div>
     </div>
     <section id="sections"></section>
     <div id="help-popup">

@@ -121,16 +121,13 @@ function styleSectionsEqual({sections: a}, {sections: b}) {
 
 async function calcStyleDigest(style) {
   // retain known properties in an arbitrarily predefined order
-  const src = style.usercssData
-    ? style.sourceCode
-    // retain known properties in an arbitrarily predefined order
-    : JSON.stringify((style.sections || []).map(section => /** @namespace StyleSection */({
-      code: section.code || '',
-      urls: section.urls || [],
-      urlPrefixes: section.urlPrefixes || [],
-      domains: section.domains || [],
-      regexps: section.regexps || [],
-    })));
+  const src = JSON.stringify((style.sections || []).map(section => /** @namespace StyleSection */({
+    code: section.code || '',
+    urls: section.urls || [],
+    urlPrefixes: section.urlPrefixes || [],
+    domains: section.domains || [],
+    regexps: section.regexps || [],
+  })));
   const srcBytes = new TextEncoder().encode(src);
   const res = await crypto.subtle.digest('SHA-1', srcBytes);
   return Array.from(new Uint8Array(res), b => (0x100 + b).toString(16).slice(1)).join('');

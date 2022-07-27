@@ -1,5 +1,5 @@
 /* global API */// msg.js
-/* global RX_META debounce stringAsRegExp tryRegExp */// toolbox.js
+/* global debounce stringAsRegExp tryRegExp */// toolbox.js
 /* global addAPI */// common.js
 'use strict';
 
@@ -8,25 +8,12 @@
   const cache = new Map();
   const METAKEYS = ['customName', 'name', 'url', 'installationUrl', 'updateUrl'];
 
-  const extractMeta = style =>
-    style.usercssData
-      ? (style.sourceCode.match(RX_META) || [''])[0]
-      : null;
-
-  const stripMeta = style =>
-    style.usercssData
-      ? style.sourceCode.replace(RX_META, '')
-      : null;
-
   const MODES = Object.assign(Object.create(null), {
-    code: (style, test) =>
-      style.usercssData
-        ? test(stripMeta(style))
-        : searchSections(style, test, 'code'),
+    code: (style, test) => searchSections(style, test, 'code'),
 
     meta: (style, test, part) =>
       METAKEYS.some(key => test(style[key])) ||
-      test(part === 'all' ? style.sourceCode : extractMeta(style)) ||
+      test(part === 'all' ? style.sourceCode : null) ||
       searchSections(style, test, 'funcs'),
 
     name: (style, test) =>
@@ -34,8 +21,7 @@
       test(style.name),
 
     all: (style, test) =>
-      MODES.meta(style, test, 'all') ||
-      !style.usercssData && MODES.code(style, test),
+      MODES.meta(style, test, 'all') || MODES.code(style, test),
   });
 
   addAPI(/** @namespace API */ {

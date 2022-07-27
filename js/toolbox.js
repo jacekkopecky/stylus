@@ -2,7 +2,6 @@
 
 /* exported
   CHROME_POPUP_BORDER_BUG
-  RX_META
   UA
   capitalize
   clamp
@@ -21,6 +20,7 @@
   stringAsRegExp
   tryCatch
   tryRegExp
+  tryJSONparse
   tryURL
   waitForTabUrl
 */
@@ -63,8 +63,6 @@ const URLS = {
     UA.opera ? 'opera://settings/configureCommands'
           : 'chrome://extensions/configureCommands',
 
-  installUsercss: chrome.runtime.getURL('install-usercss.html'),
-
   // CWS cannot be scripted in chromium, see ChromeExtensionsClient::IsScriptableURL
   // https://cs.chromium.org/chromium/src/chrome/common/extensions/chrome_extensions_client.cc
   browserWebStore:
@@ -84,45 +82,9 @@ const URLS = {
     'about:newtab',
   ],
 
-  favicon: host => `https://icons.duckduckgo.com/ip3/${host}.ico`,
-
   // Chrome 61.0.3161+ doesn't run content scripts on NTP https://crrev.com/2978953002/
   // TODO: remove when "minimum_chrome_version": "61" or higher
   chromeProtectsNTP: CHROME >= 61,
-
-  uso: 'https://userstyles.org/',
-  usoJson: 'https://userstyles.org/styles/chrome/',
-
-  usoArchive: 'https://uso.kkx.one/',
-  usoArchiveRaw: [
-    'https://cdn.jsdelivr.net/gh/33kk/uso-archive@flomaster/data/',
-    'https://raw.githubusercontent.com/33kk/uso-archive/flomaster/data/',
-  ],
-
-  usw: 'https://userstyles.world/',
-
-  extractUsoArchiveId: url =>
-    url &&
-    URLS.usoArchiveRaw.some(u => url.startsWith(u)) &&
-    Number(url.match(/\/(\d+)\.user\.css|$/)[1]),
-  extractUsoArchiveInstallUrl: url => {
-    const id = URLS.extractUsoArchiveId(url);
-    return id ? `${URLS.usoArchive}style/${id}` : '';
-  },
-  makeUsoArchiveCodeUrl: id => `${URLS.usoArchiveRaw[0]}usercss/${id}.user.css`,
-
-  extractGreasyForkInstallUrl: url =>
-    /^(https:\/\/(?:greasy|sleazy)fork\.org\/scripts\/\d+)[^/]*\/code\/[^/]*\.user\.css$|$/.exec(url)[1],
-
-  extractUSwId: url =>
-    url &&
-    url.startsWith(URLS.usw) &&
-    Number(url.match(/\/(\d+)\.user\.css|$/)[1]),
-  extractUSwInstallUrl: url => {
-    const id = URLS.extractUSwId(url);
-    return id ? `${URLS.usw}style/${id}` : '';
-  },
-  makeUswCodeUrl: id => `${URLS.usw}api/style/${id}.user.css`,
 
   supported: url => (
     url.startsWith('http') ||
@@ -134,8 +96,6 @@ const URLS = {
 
   isLocalhost: url => /^file:|^https?:\/\/(localhost|127\.0\.0\.1)\//.test(url),
 };
-
-const RX_META = /\/\*!?\s*==userstyle==[\s\S]*?==\/userstyle==\s*\*\//i;
 
 if (FIREFOX || UA.opera || UA.vivaldi) {
   document.documentElement.classList.add(
@@ -453,30 +413,14 @@ function download(url, {
   body,
   responseType = 'text',
   requiredStatusCode = 200,
-  timeout = 60e3, // connection timeout, USO is that bad
-  loadTimeout = 2 * 60e3, // data transfer timeout (counted from the first remote response)
+  timeout = 60e3,
+  loadTimeout = 2 * 60e3,
   headers,
   responseHeaders,
 } = {}) {
-  /* USO can't handle POST requests for style json and XHR/fetch can't handle super long URL
-   * so we need to collapse all long variables and expand them in the response */
-  const queryPos = url.startsWith(URLS.uso) ? url.indexOf('?') : -1;
-  if (queryPos >= 0) {
-    if (body === undefined) {
-      method = 'POST';
-      body = url.slice(queryPos);
-      url = url.slice(0, queryPos);
-    }
-    if (headers === undefined) {
-      headers = {
-        'Content-type': 'application/x-www-form-urlencoded',
-      };
-    }
-  }
-  const usoVars = [];
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const u = new URL(collapseUsoVars(url), location);
+    const u = new URL(url, location);
     const onTimeout = () => {
       xhr.abort();
       reject(new Error('Timeout fetching ' + u.href));
@@ -491,7 +435,7 @@ function download(url, {
     };
     xhr.onload = () => {
       if (xhr.status === requiredStatusCode || !requiredStatusCode || u.protocol === 'file:') {
-        const response = expandUsoVars(xhr.response);
+        const response = xhr.response;
         if (responseHeaders) {
           const headers = {};
           for (const h of responseHeaders) headers[h] = xhr.getResponseHeader(h);
@@ -512,36 +456,6 @@ function download(url, {
     }
     xhr.send(body);
   });
-
-  function collapseUsoVars(url) {
-    if (queryPos < 0 ||
-        url.length < 2000 ||
-        !url.startsWith(URLS.usoJson) ||
-        !/^get$/i.test(method)) {
-      return url;
-    }
-    const params = new URLSearchParams(url.slice(queryPos + 1));
-    for (const [k, v] of params.entries()) {
-      if (v.length < 10 || v.startsWith('ik-')) continue;
-      usoVars.push(v);
-      params.set(k, `\x01${usoVars.length}\x02`);
-    }
-    return url.slice(0, queryPos + 1) + params.toString();
-  }
-
-  function expandUsoVars(response) {
-    if (!usoVars.length || !response) return response;
-    const isText = typeof response === 'string';
-    const json = isText && tryJSONparse(response) || response;
-    json.updateUrl = url;
-    for (const section of json.sections || []) {
-      const {code} = section;
-      if (code.includes('\x01')) {
-        section.code = code.replace(/\x01(\d+)\x02/g, (_, num) => usoVars[num - 1] || '');
-      }
-    }
-    return isText ? JSON.stringify(json) : json;
-  }
 }
 
 async function closeCurrentTab() {

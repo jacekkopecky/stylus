@@ -1,11 +1,10 @@
 /* global API msg */// msg.js
-/* global CHROME URLS deepEqual isEmptyObj mapObj stringAsRegExp tryRegExp tryURL */// toolbox.js
+/* global CHROME deepEqual mapObj stringAsRegExp tryRegExp tryURL */// toolbox.js
 /* global bgReady createCache uuidIndex */// common.js
 /* global calcStyleDigest styleCodeEmpty styleSectionGlobal */// sections-util.js
 /* global db */
 /* global prefs */
 /* global tabMan */
-/* global usercssMan */
 /* global colorScheme */
 'use strict';
 
@@ -99,13 +98,11 @@ const styleMan = (() => {
   return {
 
     /** @returns {Promise<number>} style id */
-    async delete(id, reason) {
+    async delete(id) {
       if (ready.then) await ready;
       const {style, appliesTo} = dataMap.get(id);
-      const sync = reason !== 'sync';
       const uuid = style._id;
       db.styles.delete(id);
-      if (sync) API.sync.delete(uuid, Date.now());
       for (const url of appliesTo) {
         const cache = cachedStyleForUrl.get(url);
         if (cache) delete cache.sections[id];
@@ -118,10 +115,6 @@ const styleMan = (() => {
         if (i >= 0) group.splice(i, 1);
       });
       setOrder(orderWrap, {calc: false});
-      if (style._usw && style._usw.token) {
-        // Must be called after the style is deleted from dataMap
-        API.usw.revoke(id);
-      }
       API.drafts.delete(id);
       await msg.broadcast({
         method: 'styleDeleted',
@@ -271,9 +264,6 @@ const styleMan = (() => {
       if (ready.then) await ready;
       for (const style of items) {
         beforeSave(style);
-        if (style.sourceCode && style.usercssData) {
-          await usercssMan.buildCode(style);
-        }
       }
       const events = await db.styles.putMany(items);
       return Promise.all(items.map((item, i) =>
@@ -287,7 +277,7 @@ const styleMan = (() => {
       reason = reason || dataMap.has(style.id) ? 'update' : 'install';
       style = mergeWithMapped(style);
       style.originalDigest = await calcStyleDigest(style);
-      // FIXME: update updateDate? what about usercss config?
+      // FIXME: update updateDate?
       return saveStyle(style, {reason});
     },
 
@@ -481,9 +471,6 @@ const styleMan = (() => {
     } else {
       data.style = style;
     }
-    if (reason !== 'sync') {
-      API.sync.putDoc(style);
-    }
     if (broadcast) broadcastStyleUpdated(style, reason, method);
     return style;
   }
@@ -520,7 +507,7 @@ const styleMan = (() => {
     bgReady._resolveStyles();
   }
 
-  function fixKnownProblems(style, initIndex, initArray) {
+  function fixKnownProblems(style) {
     let res = 0;
     for (const key in MISSING_PROPS) {
       if (!style[key]) {
@@ -546,33 +533,6 @@ const styleMan = (() => {
         res = 1;
         style[key] = fixedUrl;
       }
-    }
-    let url;
-    /* USO bug, duplicate "update" subdomain, see #523 */
-    if ((url = style.md5Url) && url.includes('update.update.userstyles')) {
-      res = style.md5Url = url.replace('update.update.userstyles', 'update.userstyles');
-    }
-    /* Default homepage URL for external styles installed from a known distro */
-    if (
-      (!style.url || !style.installationUrl) &&
-      (url = style.updateUrl) &&
-      (url = URLS.extractGreasyForkInstallUrl(url) ||
-        URLS.extractUsoArchiveInstallUrl(url) ||
-        URLS.extractUSwInstallUrl(url)
-      )
-    ) {
-      if (!style.url) res = style.url = url;
-      if (!style.installationUrl) res = style.installationUrl = url;
-    }
-    /* @import must precede `vars` that we add at beginning */
-    if (
-      initArray &&
-      !isEmptyObj((style.usercssData || {}).vars) &&
-      style.sections.some(({code}) =>
-        code.startsWith(':root {\n  --') &&
-        /@import\s/i.test(code))
-    ) {
-      return usercssMan.buildCode(style);
     }
     return res && style;
   }
@@ -749,9 +709,6 @@ const styleMan = (() => {
     }
     if (store) {
       await API.prefsDb.put(orderWrap, orderWrap.id);
-    }
-    if (sync) {
-      API.sync.putDoc(orderWrap);
     }
   }
 

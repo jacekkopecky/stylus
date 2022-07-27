@@ -10,19 +10,7 @@ const MODAL_SHOWN = 'data-display'; // attribute name
 const Events = {
 
   async configure(event) {
-    const {styleId, styleIsUsercss} = getClickedStyleElement(event);
-    if (styleIsUsercss) {
-      const [style] = await Promise.all([
-        API.styles.get(styleId),
-        require(['/popup/hotkeys']), /* global hotkeys */
-        require(['/js/dlg/config-dialog']), /* global configDialog */
-      ]);
-      hotkeys.setState(false);
-      await configDialog(style);
-      hotkeys.setState(true);
-    } else {
-      Events.openURLandHide.call(this, event);
-    }
+    Events.openURLandHide.call(this, event);
   },
 
   copyContent(event) {

@@ -82,7 +82,6 @@ function createBeautifyUI(scope, options) {
         $createOption('}', 'newline_between_rules'),
         $createLabeledCheckbox('preserve_newlines', 'styleBeautifyPreserveNewlines'),
         $createLabeledCheckbox('indent_conditional', 'styleBeautifyIndentConditional'),
-        editor.isUsercss && $createLabeledCheckbox('indent_mozdoc', '', '... @-moz-document'),
       ]),
       $create('p.beautify-hint', [
         $create('span', t('styleBeautifyHint') + '\u00A0'),

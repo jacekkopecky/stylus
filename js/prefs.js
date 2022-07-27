@@ -25,7 +25,6 @@
     'disableAll': false,            // boss key
     'exposeIframes': false,         // Add 'stylus-iframe' attribute to HTML element in all iframes
     'exposeStyleName': false,       // Add style name to the style for better devtools experience
-    'newStyleAsUsercss': false,     // create new style in usercss format
     'styleViaXhr': false,           // early style injection to avoid FOUC
     'patchCsp': false,              // add data: and popular image hosting sites to strict CSP
 
@@ -47,10 +46,8 @@
 
     'manage.onlyEnabled': false,    // display only enabled styles
     'manage.onlyLocal': false,      // display only styles created locally
-    'manage.onlyUsercss': false,    // display only usercss styles
     'manage.onlyEnabled.invert': false, // display only disabled styles
     'manage.onlyLocal.invert': false,   // display only externally installed styles
-    'manage.onlyUsercss.invert': false, // display only non-usercss (standard) styles
     // UI element state: expanded/collapsed
     'manage.actions.expanded': true,
     'manage.backup.expanded': true,
@@ -256,7 +253,7 @@
 
   function isKnown(key) {
     const res = knownKeys.includes(key);
-    if (!res) console.warn('Unknown preference "%s"', key);
+    if (!res) console.warn(`Unknown preference "${key}"`);
     return res;
   }
 

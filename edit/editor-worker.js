@@ -51,19 +51,6 @@
       return ruleRetriever[linter](); // eslint-disable-line no-use-before-define
     },
 
-    metalint(code) {
-      require(['/js/meta-parser']); /* global metaParser */
-      const result = metaParser.lint(code);
-      // extract needed info
-      result.errors = result.errors.map(err => ({
-        code: err.code,
-        args: err.args,
-        message: err.message,
-        index: err.index,
-      }));
-      return result;
-    },
-
     async stylelint(opts) {
       // Removing an unused API that spits a warning in Chrome console due to stylelint's isBuffer
       delete self.SharedArrayBuffer;

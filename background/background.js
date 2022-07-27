@@ -3,16 +3,10 @@
 /* global createWorker */// worker-util.js
 /* global prefs */
 /* global styleMan */
-/* global syncMan */
-/* global updateMan */
-/* global usercssMan */
-/* global uswApi */
 /* global
   FIREFOX
   UA
-  URLS
   activateTab
-  download
   findExistingTab
   openURL
 */ // toolbox.js
@@ -39,19 +33,9 @@ addAPI(/** @namespace API */ {
   }))(),
 
   styles: styleMan,
-  sync: syncMan,
-  updater: updateMan,
-  usercss: usercssMan,
-  usw: uswApi,
   colorScheme,
   /** @type {BackgroundWorker} */
   worker: createWorker({url: '/background/background-worker'}),
-
-  download(url, opts) {
-    return typeof url === 'string' && url.startsWith(URLS.uso) &&
-      this.sender.url.startsWith(URLS.uso) &&
-      download(url, opts || {});
-  },
 
   /** @returns {string} */
   getTabUrlPrefix() {

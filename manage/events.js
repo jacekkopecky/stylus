@@ -21,20 +21,13 @@ const Events = {
 
   addEntryTitle(link) {
     const style = link.closest('.entry').styleMeta;
-    const ucd = style.usercssData;
     link.title =
       `${t('dateInstalled')}: ${t.formatDate(style.installDate, true) || '—'}\n` +
-      `${t('dateUpdated')}: ${t.formatDate(style.updateDate, true) || '—'}\n` +
-      (ucd ? `UserCSS, v.${ucd.version}` : '');
+      `${t('dateUpdated')}: ${t.formatDate(style.updateDate, true) || '—'}\n`;
   },
 
   check(event, entry) {
     checkUpdate(entry, {single: true});
-  },
-
-  async config(event, {styleMeta}) {
-    await require(['/js/dlg/config-dialog']); /* global configDialog */
-    configDialog(styleMeta);
   },
 
   async delete(event, entry) {
@@ -140,7 +133,7 @@ const Events = {
   update(event, entry) {
     const json = entry.updatedCode;
     json.id = entry.styleId;
-    (json.usercssData ? API.usercss.install : API.styles.install)(json);
+    API.styles.install(json);
   },
 };
 
@@ -152,7 +145,6 @@ Events.ENTRY_ROUTES = {
   '.update': Events.update,
   '.delete': Events.delete,
   '.applies-to .expander': Events.expandTargets,
-  '.configure-usercss': Events.config,
 };
 Events.ENTRY_ROUTES_CTX = {
   '.applies-to .expander': Events.expandTargets,

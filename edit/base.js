@@ -3,7 +3,6 @@
 /* global CODEMIRROR_THEMES */
 /* global CodeMirror */
 /* global MozDocMapper */// sections-util.js
-/* global chromeSync */// storage-util.js
 /* global initBeautifyButton */// beautify.js
 /* global prefs */
 /* global t */// localization.js
@@ -17,7 +16,6 @@
 const editor = {
   style: null,
   dirty: DirtyReporter(),
-  isUsercss: false,
   isWindowed: false,
   livePreview: LivePreview(),
   /** @type {'customName'|'name'} */
@@ -76,16 +74,13 @@ const editor = {
       ],
     };
     // switching the mode here to show the correct page ASAP, usually before DOMContentLoaded
-    const isUC = Boolean(style.usercssData || !id && prefs.get('newStyleAsUsercss'));
     Object.assign(editor, /** @namespace Editor */ {
       style,
-      isUsercss: isUC,
-      template: isUC && !id && chromeSync.getLZValue(chromeSync.LZ_KEY.usercssTemplate), // promise
     });
     editor.updateClass();
     editor.updateTheme(prefs.get('editor.theme'));
     editor.updateTitle(false);
-    $.rootCL.add(isUC ? 'usercss' : 'sectioned');
+    $.rootCL.add('sectioned');
     sessionStore.justEditedStyleId = id || '';
     // no such style so let's clear the invalid URL parameters
     if (!id) history.replaceState({}, '', location.pathname);
@@ -126,9 +121,9 @@ function EditorHeader() {
   function initNameArea() {
     const nameEl = $('#name');
     const resetEl = $('#reset-name');
-    const isCustomName = editor.style.updateUrl || editor.isUsercss;
+    const isCustomName = editor.style.updateUrl;
     editor.nameTarget = isCustomName ? 'customName' : 'name';
-    nameEl.placeholder = t(editor.isUsercss ? 'usercssEditorNamePlaceholder' : 'styleMissingName');
+    nameEl.placeholder = t('styleMissingName');
     nameEl.title = isCustomName ? t('customNameHint') : '';
     nameEl.on('input', () => {
       editor.updateName(true);

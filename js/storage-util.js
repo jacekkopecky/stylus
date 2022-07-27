@@ -36,7 +36,6 @@
     LZ_KEY: {
       csslint: 'editorCSSLintConfig',
       stylelint: 'editorStylelintConfig',
-      usercssTemplate: 'usercssTemplate',
     },
   };
 
