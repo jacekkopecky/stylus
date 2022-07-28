@@ -2743,6 +2743,7 @@ self.parserlib = (() => {
           return tok;
         case '/':
           if (b === '*') {
+            tok.value = this.readComment(a);
             tok.type = Tokens.COMMENT;
           } else {
             tok.type = Tokens.SLASH;
@@ -3911,7 +3912,7 @@ self.parserlib = (() => {
       const stream = this._tokenStream;
       let braceOpened;
       try {
-        stream.skipComment(undefined, true);
+        stream.skipComment();
         if (parserCache.findBlock()) {
           return true;
         }
