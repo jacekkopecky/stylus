@@ -93,8 +93,6 @@ function createStyleElement({style, name: nameLC}) {
         regexpsBefore: '/',
         regexpsAfter: '/',
       },
-      oldCheckUpdate: !newUI.enabled && $('.check-update', entry),
-      oldUpdate: !newUI.enabled && $('.update', entry),
     };
   }
   const parts = elementParts;
@@ -108,9 +106,6 @@ function createStyleElement({style, name: nameLC}) {
   delete parts.infoVer.dataset.isDate;
   if (newUI.enabled) {
     createAgeText(parts.infoAge, style);
-  } else {
-    parts.oldCheckUpdate.classList.toggle('hidden', !style.updateUrl);
-    parts.oldUpdate.classList.toggle('hidden', !style.updateUrl);
   }
 
   // clear the code to free up some memory
@@ -124,14 +119,10 @@ function createStyleElement({style, name: nameLC}) {
   entry.styleNameLowerCase = nameLC || name.toLocaleLowerCase() + '\n' + name;
   entry.styleMeta = style;
   entry.className = parts.entryClassBase + ' ' +
-    (style.enabled ? 'enabled' : 'disabled') +
-    (style.updateUrl ? ' updatable' : '');
+    (style.enabled ? 'enabled' : 'disabled');
 
   if (style.url) {
     $('.homepage', entry).appendChild(parts.homepageIcon.cloneNode(true));
-  }
-  if (style.updateUrl && newUI.enabled) {
-    $('.actions', entry).appendChild(t.template.updaterIcons.cloneNode(true));
   }
 
   createTargetsElement({entry, style});

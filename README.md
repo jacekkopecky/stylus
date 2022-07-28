@@ -10,5 +10,3 @@ It also removes other things that made the removal of the above easier:
 
 - localization (transifex)
 - any syncing, any cloud, usercss, meta
-
-

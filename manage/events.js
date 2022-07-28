@@ -1,6 +1,5 @@
 /* global API */// msg.js
 /* global changeQueue installed newUI */// manage.js
-/* global checkUpdate handleUpdateInstalled */// updater-ui.js
 /* global createStyleElement createTargetsElement getFaviconSrc */// render.js
 /* global debounce getOwnTab openURL sessionStore */// toolbox.js
 /* global filterAndAppend showFiltersStats */// filters.js
@@ -24,10 +23,6 @@ const Events = {
     link.title =
       `${t('dateInstalled')}: ${t.formatDate(style.installDate, true) || '—'}\n` +
       `${t('dateUpdated')}: ${t.formatDate(style.updateDate, true) || '—'}\n`;
-  },
-
-  check(event, entry) {
-    checkUpdate(entry, {single: true});
   },
 
   async delete(event, entry) {
@@ -141,7 +136,6 @@ Events.ENTRY_ROUTES = {
   'input, .enable, .disable': Events.toggle,
   '.style-name': Events.name,
   '.homepage': Events.external,
-  '.check-update': Events.check,
   '.update': Events.update,
   '.delete': Events.delete,
   '.applies-to .expander': Events.expandTargets,
@@ -168,10 +162,6 @@ function handleDelete(id) {
   const node = $entry(id);
   if (node) {
     node.remove();
-    if (node.matches('.can-update')) {
-      const btnApply = $('#apply-all-updates');
-      btnApply.dataset.value = Number(btnApply.dataset.value) - 1;
-    }
     showFiltersStats();
   }
 }
@@ -190,9 +180,6 @@ function handleUpdate(style, {reason, method} = {}) {
     } else {
       oldEntry.remove();
     }
-  }
-  if ((reason === 'update' || reason === 'install') && entry.matches('.updatable')) {
-    handleUpdateInstalled(entry, reason);
   }
   filterAndAppend({entry}).then(sorter.update);
   if (!entry.matches('.hidden') && reason !== 'import' && reason !== 'sync') {

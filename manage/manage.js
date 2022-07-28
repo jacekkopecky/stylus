@@ -58,7 +58,6 @@ newUI.renderClass();
   installed.on('contextmenu', Events.entryClicked);
   installed.on('mouseover', Events.lazyAddEntryTitle, {passive: true});
   installed.on('mouseout', Events.lazyAddEntryTitle, {passive: true});
-  $('#sync-styles').onclick =
   $('#manage-options-button').onclick =
     router.makeToggle('stylus-options', toggleEmbeddedOptions);
   $('#injection-order-button').onclick =
@@ -66,10 +65,6 @@ newUI.renderClass();
       '/vendor/draggable-list/draggable-list.iife',
       '/injection-order/injection-order.css',
       '/injection-order/injection-order', /* global InjectionOrder */
-    ]);
-  $('#update-history-button').onclick =
-    router.makeToggle('update-history', (...args) => showUpdateHistory(...args), [
-      '/manage/updater-ui', /* global showUpdateHistory */
     ]);
   $$('#header a[href^="http"]').forEach(a => (a.onclick = Events.external));
   window.on('pageshow', handleVisibilityChange);
@@ -103,7 +98,6 @@ newUI.renderClass();
   setTimeout(require, 0, [
     '/manage/import-export',
     '/manage/incremental-search',
-    '/manage/updater-ui',
   ]);
 })();
 

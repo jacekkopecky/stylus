@@ -55,20 +55,6 @@ a:hover {
   z-index: 9;
 }
 
-#update-check,
-#update-all {
-  margin-bottom: .5rem;
-}
-
-#check-all-updates {
-  max-width: calc(100% - 30px);
-}
-
-#check-all-updates-force {
-  white-space: normal;
-  text-align: left;
-}
-
 #header h1 {
   margin-top: 0;
   margin-bottom: .3em;
@@ -479,11 +465,6 @@ a:hover {
   height: 20px;
 }
 
-.newUI .updater-icons > * {
-  transition: opacity 1s;
-  display: none;
-}
-
 .newUI .entry .svg-icon {
   fill: var(--c60);
 }
@@ -499,83 +480,8 @@ button .svg-icon,
   fill: var(--fg);
 }
 
-.newUI .checking-update .check-update {
-  opacity: 0;
-  display: inline-block;
-  pointer-events: none;
-}
-
-.newUI .can-update .update,
-.newUI .no-update:not(.update-problem):not(.update-done) .up-to-date,
-.newUI .no-update.update-problem .check-update,
-.newUI .update-done .updated {
-  display: inline-block;
-}
-
-.newUI .up-to-date svg,
-.newUI .updated svg {
-  cursor: auto;
-}
-
-.newUI .update-done .updated svg {
-  top: -4px;
-  position: relative;
-  filter: drop-shadow(0 5px 0 currentColor);
-}
-
-.newUI .can-update .update,
-.newUI .no-update.update-problem .check-update {
-  cursor: pointer;
-}
-
-.newUI .can-update[data-details$="locally edited"] .update svg,
-.newUI .update-problem .check-update svg {
-  fill: #ef6969;
-}
-
-.newUI .can-update[data-details$="locally edited"]:hover .update svg,
-.newUI .entry.update-problem:hover .check-update svg {
-  fill: #fd4040;
-}
-
-.newUI .can-update[data-details$="locally edited"]:hover .update svg:hover,
-.newUI .entry.update-problem:hover .check-update svg:hover {
-  fill: red;
-}
-
 .newUI .actions {
   z-index: 100;
-}
-
-.newUI .updater-icons > :not(.check-update):after {
-  content: attr(title);
-  position: absolute;
-  margin-top: 18px;
-  margin-left: -36px;
-  padding: 1ex 1.5ex;
-  border: 1px solid #ded597;
-  background-color: #fffbd6;
-  border-radius: 4px;
-  box-shadow: 2px 3px 10px rgba(0,0,0,.25);
-  font-size: 90%;
-  animation: fadeout 10s;
-  animation-fill-mode: both;
-}
-
-.newUI .update-problem .check-update:after {
-  background-color: red;
-  border: 1px solid #d40000;
-  color: white;
-  animation: none;
-}
-
-.newUI .can-update .update:after {
-  animation: none;
-}
-
-.newUI .can-update:not([data-details$="locally edited"]) .update:after {
-  background-color: #c0fff0;
-  border: 1px solid #89cac9;
 }
 
 .newUI .applies-to {
@@ -660,78 +566,6 @@ button .svg-icon,
   text-align: center;
   border-radius: 50%;
   color: var(--bg);
-}
-
-/* Default, no update buttons */
-.updater-icons .update,
-.updater-icons .check-update {
-  display: none;
-}
-
-/* Check update button for things that can */
-.updatable .check-update {
-  display: inline-block;
-}
-
-/* Update check in progress */
-.checking-update .check-update {
-  display: none;
-}
-
-/* Updates available */
-.can-update .update {
-  display: inline-block;
-}
-
-.can-update[data-details$="locally edited"] button.update:after {
-  content: "*";
-}
-
-.can-update .check-update {
-  display: none;
-}
-
-/* Updates not available */
-.no-update:not(.update-problem) .check-update {
-  display: none;
-}
-
-/* Updates done */
-.update-done .check-update {
-  display: none;
-}
-
-#apply-all-updates:after {
-  content: " (" attr(data-value) ")";
-}
-
-.update-in-progress #check-all-updates {
-  position: relative;
-}
-
-.update-in-progress #update-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  background-color: currentColor;
-  content: "";
-  opacity: .35;
-}
-
-#check-all-updates-force {
-  margin-top: 1ex;
-}
-
-#update-all-no-updates[data-skipped-edited="true"] {
-  font-weight: bold;
-}
-
-#update-all-no-updates[data-skipped-edited="true"]::after {
-  content: " " var(--updateAllCheckSucceededSomeEdited);
-  font-weight: normal;
-  display: block;
-  margin: .75em 0 .5em;
 }
 
 /* highlight updated/added styles */
@@ -931,13 +765,6 @@ button .svg-icon,
 
 #import details > button {
   margin: .5em 1.25em 0;
-}
-
-.update-history {
-  font-size: 11px;
-  white-space: pre;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
 }
 
 /* sort font */

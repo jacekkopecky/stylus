@@ -45,9 +45,7 @@
     'popup.findSort': 'u',          // the inline style search sort order
 
     'manage.onlyEnabled': false,    // display only enabled styles
-    'manage.onlyLocal': false,      // display only styles created locally
     'manage.onlyEnabled.invert': false, // display only disabled styles
-    'manage.onlyLocal.invert': false,   // display only externally installed styles
     // UI element state: expanded/collapsed
     'manage.actions.expanded': true,
     'manage.backup.expanded': true,
