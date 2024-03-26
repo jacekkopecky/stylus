@@ -1,10 +1,10 @@
 {
-  "name": "Stylus",
-  "version": "1.5.25",
-  "description": "Redesign the web with Stylus, a user styles manager",
+  "name": "Stylus-without-network",
+  "version": "0.0.1",
+  "description": "Redesign the web with Stylus, a user styles manager; this is a cut-down clone without cloud features.",
   "license": "GPL-3.0-only",
   "repository": "openstyles/stylus",
-  "author": "Stylus Team",
+  "author": "Jacek Kopecky <jacek@jacek.cz>, Stylus Team",
   "dependenciesNotes": {
     "codemirror": "WARNING! Always use an exact version and test it for a while before releasing"
   },
