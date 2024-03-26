@@ -331,7 +331,7 @@
     "description": "Label for the button to delete a style"
   },
   "description": {
-    "message": "Redesign the web with Stylus, a user styles manager. Stylus allows you to easily install themes and skins for many popular sites.",
+    "message": "Redesign the web with Stylus-without-network, a user styles manager. A clone of Stylus, but without any cloud sharing of custom stylesheets.",
     "description": "Extension description"
   },
   "disableAllStyles": {
@@ -1097,7 +1097,7 @@
     "message": "Instant inject mode"
   },
   "optionsAdvancedStyleViaXhrNote": {
-    "message": "Enable this if you encounter flashing of unstyled content (FOUC) when browsing, which is especially noticeable with dark themes.\n\nThe technical reason is that Chrome/Chromium postpones asynchronous communication of extensions, in a usually meaningless attempt to improve page load speed, potentially causing styles to be late to apply. To circumvent this, since web extensions are not provided a synchronous API, Stylus provides this option to utilize the \"deprecated\" synchronous XMLHttpRequest web API to fetch applicable styles. There shouldn't be any detrimental effects, since the request is fulfilled within a few milliseconds while the page is still being downloaded from the server.\n\nNevertheless, Chromium will print a warning in devtools' console. Right-clicking a warning, and hiding them, will prevent future warnings from being shown."
+    "message": "Enable this if you encounter flashing of unstyled content (FOUC) when browsing, which is especially noticeable with dark themes.\n\nThe technical reason is that the browser postpones asynchronous communication of extensions, in a usually meaningless attempt to improve page load speed, potentially causing styles to be late to apply. To circumvent this, since web extensions are not provided a synchronous API, Stylus provides this option to utilize the \"deprecated\" synchronous XMLHttpRequest web API to fetch applicable styles. There shouldn't be any detrimental effects, since the request is fulfilled within a few milliseconds while the page is still being downloaded from the server.\n\nNevertheless, Chromium will print a warning in devtools' console. Right-clicking a warning, and hiding them, will prevent future warnings from being shown."
   },
   "optionsBadgeDisabled": {
     "message": "Background color when disabled"
@@ -1265,7 +1265,7 @@
     "message": "Add white borders on the sides"
   },
   "popupBordersTooltip": {
-    "message": "Useful for dark themes in new Chrome as it no longer paints the side borders"
+    "message": "Useful for dark themes in new Microsoft Edge as it no longer paints the side borders"
   },
   "popupHotkeysInfo": {
     "message": "<1>-<9>, <0>, also on numpad - toggles Nth style (0 is 10)\n<A>-<Z> toggles first style with a name that starts with the letter\n<Shift> opens editor instead of toggling\n<Numpad +> enables listed styles\n<Numpad –> disables listed styles\n<Numpad *> and <`> (backtick) - toggles initially enabled styles; doesn't apply to subsequently enabled styles while the popup is open so you can restore the initial selection after testing stuff: simply disable all, then toggle i.e. <Numpad –> <Numpad *>\nMore info on wiki",
@@ -1685,7 +1685,7 @@
     "description": "Note in the toolbar pop-up when on a URL Stylus can't affect"
   },
   "stylusUnavailableForURLdetails": {
-    "message": "As a security precaution, the browser prohibits extensions from affecting its built-in pages (like chrome://version, the standard new tab page as of Chrome 61, about:addons, and so on) as well as other extensions' pages. Each browser also restricts access to its own extensions gallery (like Chrome Web Store or AMO).",
+    "message": "As a security precaution, the browser prohibits extensions from affecting its built-in pages (like edge://version, the standard new tab page, about:addons, and so on) as well as other extensions' pages. Each browser also restricts access to its own extensions gallery.",
     "description": "Sub-note in the toolbar pop-up when on a URL Stylus can't affect"
   },
   "styleUpdateUrlLabel": {
@@ -1766,7 +1766,7 @@
     "description": "Note in the toolbar popup usually on file:// URLs after [re]loading Stylus"
   },
   "unreachableFileHint": {
-    "message": "Stylus can access file:// URLs only if you enable the corresponding checkbox for Stylus extension on chrome://extensions page.",
+    "message": "Stylus can access file:// URLs only if you enable the corresponding checkbox for Stylus extension on edge://extensions page.",
     "description": "Note in the toolbar popup for file:// URLs"
   },
   "unreachableMozSiteHint": {
