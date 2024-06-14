@@ -331,7 +331,7 @@
     "description": "Label for the button to delete a style"
   },
   "description": {
-    "message": "Redesign the web with Stylus-without-network, a user styles manager. A clone of Stylus, but without any cloud sharing of custom stylesheets.",
+    "message": "Redesign the web with Stylus-without-network, a cut-down clone of Stylus.",
     "description": "Extension description"
   },
   "disableAllStyles": {
