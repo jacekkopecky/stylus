@@ -19,7 +19,7 @@ let timer;
 if (navLocks) {
   navLocks.request(PATH, () => new Promise(NOP));
 }
-if (__.MV3 && __.ENTRY === true || __.ENTRY === 'offscreen') {
+if (__.ENTRY === true || __.ENTRY === 'offscreen') {
   navigator.serviceWorker.onmessage = initRemotePort.bind(COMMANDS);
   Object.assign(COMMANDS, /** @namespace CommandsAPI */ {
     /** @this {RemotePortEvent} */
@@ -227,14 +227,12 @@ function getWorkerPort(url, onerror) {
   }
   // Chrome Android
   let target = global;
-  if (!__.MV3 && __.IS_BG) { // in MV2 the bg page can create Worker
-    worker = target[kWorker];
-  } else if (__.ENTRY === true) {
+  if (__.ENTRY === true) {
     for (const view of chrome.extension.getViews()) {
       if ((worker = view[kWorker])) {
         break;
       }
-      if (view.location.pathname === (__.MV3 ? PATH_OFFSCREEN : `/${__.PAGE_BG}.html`)) {
+      if (view.location.pathname === PATH_OFFSCREEN) {
         target = view;
       }
     }

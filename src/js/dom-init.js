@@ -15,7 +15,7 @@ prefs.subscribe('disableAll', (_, val) => {
 }, true);
 
 $root.classList.add(
-  __.MV3 ? 'mv3' : 'mv2',
+  'mv3',
   MOBILE ? 'mobile' : 'desktop',
   WINDOWS ? 'windows' : 'non-windows',
   FIREFOX ? 'firefox' : 'chromium',

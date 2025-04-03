@@ -7,7 +7,7 @@ import {connected, disconnected, DRIVE_NAMES, getStatusText} from '@/js/sync-uti
 import {t} from '@/js/util';
 
 (async () => {
-  let {sync: status, syncOpts} = __.MV3 ? clientData : await clientData;
+  let {sync: status, syncOpts} = clientData;
   const elSync = template.body.$('.sync-options');
   const elCloud = elSync.$('.cloud-name');
   const elToggle = elSync.$('.connect');

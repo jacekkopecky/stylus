@@ -13,12 +13,12 @@ export function broadcast(data) {
 
 async function doBroadcast() {
   const [clients, tabs] = await Promise.all([
-    __.MV3 && getWindowClients(), // TODO: detect the popup in Chrome MV2 incognito window?
+    getWindowClients(),
     browser.tabs.query({}),
   ]);
   const data = toBroadcast;
   toBroadcast = null;
-  if (!__.MV3 || clients[0])
+  if (clients[0])
     broadcastExtension(data, true);
   let cnt = 0;
   let url;

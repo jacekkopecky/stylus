@@ -46,11 +46,7 @@ export default async function reinjectContentScripts(targetTab) {
     const url = tab.pendingUrl || tab.url;
     // Skip unloaded/discarded/chrome tabs.
     const res = tab.width && !tab.discarded && URLS.supported(url) && (
-      /* In MV2 persistent background script our content scripts may still be pending
-       * injection at browser start, so it's too early to ping them. */
-      __.MV3 || targetTab || tab.status !== 'loading'
-        ? await injectToTab(tab.id, url, targetTab)
-        : trackBusyTab(tab.id, true)
+      await injectToTab(tab.id, url, targetTab)
     );
     if (targetTab) {
       return res && res[0] && !res[0].message /* no error */ && res[0].frameId === 0;
@@ -67,26 +63,14 @@ export default async function reinjectContentScripts(targetTab) {
       if (!cs[ALL_URLS] && !cs.matches.some(url.match, url)) {
         continue;
       }
-      if (__.MV3) {
-        jobs.push(chrome.scripting.executeScript({
-          injectImmediately: cs.run_at === 'document_start',
-          target: {
-            allFrames: cs.all_frames,
-            tabId,
-          },
-          files: cs.js,
-        }).catch(ignoreChromeError));
-      } else {
-        const options = {
-          runAt: cs.run_at,
+      jobs.push(chrome.scripting.executeScript({
+        injectImmediately: cs.run_at === 'document_start',
+        target: {
           allFrames: cs.all_frames,
-          matchAboutBlank: cs.match_about_blank,
-        };
-        for (const file of cs.js) {
-          options.file = file;
-          jobs.push(browser.tabs.executeScript(tabId, options).catch(ignoreChromeError));
-        }
-      }
+          tabId,
+        },
+        files: cs.js,
+      }).catch(ignoreChromeError));
     }
     return Promise.all(jobs);
   }

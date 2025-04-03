@@ -59,7 +59,7 @@ export default function initContextMenus() {
       const item = MENUS[id][1] ??= {};
       if (isInit) {
         item.id = id;
-        item.contexts ??= [__.MV3 ? 'action' : 'browser_action'];
+        item.contexts ??= ['action'];
         item.title = t(item.title ?? id);
       }
       if (typeof prefs.__defaults[id] === 'boolean') {
@@ -67,10 +67,7 @@ export default function initContextMenus() {
           item.type = 'checkbox';
           item.checked = prefs.__values[id];
           if (isInit) {
-            prefs.subscribe(id,
-              !__.MV3 && __.BUILD !== 'firefox' && CHROME >= 62 && CHROME <= 64
-              ? toggleCheckmarkBugged
-              : toggleCheckmark);
+            prefs.subscribe(id, toggleCheckmark);
           }
         } else if (isInit) {
           prefs.subscribe(id, togglePresence, true);
@@ -83,12 +80,6 @@ export default function initContextMenus() {
 
   function toggleCheckmark(id, checked) {
     chromeMenus.update(id, {checked}, ignoreChromeError);
-  }
-
-  /** Circumvents the bug with disabling check marks in Chrome 62-64 */
-  async function toggleCheckmarkBugged(id) {
-    await browser.contextMenus.remove(id).catch(ignoreChromeError);
-    createContextMenus([id]);
   }
 
   function togglePresence(id, checked) {

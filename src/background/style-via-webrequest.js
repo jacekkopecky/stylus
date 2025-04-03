@@ -32,7 +32,7 @@ const makeBlob = data => new Blob([JSON.stringify(data)], {type: kAppJson});
 const makeXhrCookie = blobId => `${ownId}=${blobId}; SameSite=Lax`;
 const req2key = req => req.tabId + ':' + req.frameId;
 const revokeObjectURL = blobId => blobId &&
-  (__.MV3 ? offscreen : URL).revokeObjectURL(BLOB_URL_PREFIX + blobId);
+  offscreen.revokeObjectURL(BLOB_URL_PREFIX + blobId);
 const toSend = {};
 export const webRequestBlocking = __.BUILD !== 'chrome' && FIREFOX
 || browser.permissions.contains({
@@ -45,20 +45,18 @@ let curOFF = true;
 let curCSP = false;
 let curXHR = false;
 
-if (__.MV3) {
-  toggle(); // register listeners synchronously so they wake up the SW next time it dies
-  bgPreInit.push((async () => {
-    ruleIds = await stateDB.get(kRuleIds) || {};
-    for (const id in ruleIds) ruleIdKeys[ruleIds[id]] = +id;
-  })());
-  bgBusy.then(() => setTimeout(() => prefs.subscribe(kStyleViaXhr, (key, val) => {
-    if (val || offscreen[CLIENT])
-      offscreen.keepAlive(val);
-  }, true), clientDataJobs.size ? 50/*let the client page load first*/ : 0));
-}
+toggle(); // register listeners synchronously so they wake up the SW next time it dies
+bgPreInit.push((async () => {
+  ruleIds = await stateDB.get(kRuleIds) || {};
+  for (const id in ruleIds) ruleIdKeys[ruleIds[id]] = +id;
+})());
+bgBusy.then(() => setTimeout(() => prefs.subscribe(kStyleViaXhr, (key, val) => {
+  if (val || offscreen[CLIENT])
+    offscreen.keepAlive(val);
+}, true), clientDataJobs.size ? 50/*let the client page load first*/ : 0));
 
 prefs.ready.then(() => {
-  toggle(__.MV3); // in MV3 this will unregister unused listeners
+  toggle(true); // in MV3 this will unregister unused listeners
   prefs.subscribe([idOFF, idCSP, kStyleViaXhr], toggle);
 });
 
@@ -79,13 +77,6 @@ onUnload.add((tabId, frameId) => {
 
 webNavigation.onErrorOccurred.addListener(removePreloadedStyles, WEBNAV_FILTER);
 
-if (CHROME && !__.MV3 && __.BUILD !== 'firefox') {
-  chrome.webRequest.onBeforeRequest.addListener(openNamedStyle, {
-    urls: [ownRoot + '*.user.css'],
-    types: [kMainFrame],
-  }, ['blocking']);
-}
-
 if (CHROME && __.BUILD !== 'firefox') {
   chrome.webRequest.onBeforeRequest.addListener(req => {
     // tabId < 0 means the popup is shown normally and not as a page in a tab
@@ -98,7 +89,7 @@ if (CHROME && __.BUILD !== 'firefox') {
 
 function toggle(prefKey) {
   // Must register all listeners synchronously to make them wake the SW
-  const mv3init = __.MV3 && !prefKey;
+  const mv3init = !prefKey;
   const off = prefs.__values[idOFF];
   const csp = !off && prefs.__values[idCSP];
   const xhr = !off && prefs.__values[kStyleViaXhr];
@@ -106,24 +97,19 @@ function toggle(prefKey) {
     return;
   }
   let v;
-  if (__.BUILD !== 'chrome' && FIREFOX || off !== curOFF && (
-    __.MV3
-      ? csp !== curCSP
-      : (xhr || csp) !== (curXHR || curCSP)
-  )) {
+  if (__.BUILD !== 'chrome' && FIREFOX || off !== curOFF && (csp !== curCSP)) {
     v = chrome.webRequest.onHeadersReceived;
     // unregister first since new registrations are additive internally
     toggleListener(v, false, modifyHeaders);
     toggleListener(v, !off, modifyHeaders, WR_FILTER, [
       'blocking',
       'responseHeaders',
-      !__.MV3 && xhr && chrome.webRequest.OnHeadersReceivedOptions.EXTRA_HEADERS,
-    ].filter(Boolean));
+    ]);
   }
   // In MV3 even without xhr/csp we need it to wake up the background script earlier to avoid FOUC
-  if (mv3init || off !== curOFF && (__.MV3 || (xhr || csp) !== (curXHR || curCSP))) {
+  if (mv3init || off !== curOFF) {
     toggleListener(chrome.webRequest.onBeforeRequest,
-      mv3init || !off && (__.MV3 || xhr || csp),
+      mv3init || !off,
       prepareStyles, WR_FILTER);
   }
   curCSP = csp;
@@ -149,7 +135,7 @@ async function prepareStyles(req) {
   const willStyle = payload.sections.length;
   data.url = url;
   if (oldData) removePreloadedStyles(null, key, data, willStyle);
-  if (__.MV3 && curXHR && willStyle) {
+  if (curXHR && willStyle) {
     await prepareStylesMV3(tabId, frameId, url, data, key, payload);
   }
   toSend[key] = data;
@@ -220,11 +206,9 @@ function modifyHeaders(req) {
   }
   let blobId;
   if (curXHR && (
-    blobId = (data.blobId ??=
-      !__.MV3 && URL.createObjectURL(makeBlob(payload)).slice(BLOB_URL_PREFIX.length)
-    ))) {
+    blobId = (data.blobId ??= false))) {
     blobId = makeXhrCookie(blobId);
-    if (!__.MV3 || !findHeader(responseHeaders, kSetCookie, blobId)) {
+    if (!findHeader(responseHeaders, kSetCookie, blobId)) {
       responseHeaders.push({name: kSetCookie, value: blobId});
     } else {
       blobId = false;
@@ -280,7 +264,7 @@ export function removePreloadedStyles(req, key = req2key(req), data = toSend[key
       data.timer = clearTimeout(v);
     }
   }
-  if (__.MV3 && !keep && (data ? ruleIds[v = data.ruleId] : v = ruleIdKeys[key])) {
+  if (!keep && (data ? ruleIds[v = data.ruleId] : v = ruleIdKeys[key])) {
     delete ruleIds[v];
     delete ruleIdKeys[key];
     timer ??= setTimeout(flushState);

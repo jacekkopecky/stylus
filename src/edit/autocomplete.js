@@ -2,7 +2,7 @@
 import {getStyleAtPos} from '@/cm/util';
 import {kCssPropSuffix, UCD} from '@/js/consts';
 import * as prefs from '@/js/prefs';
-import {hasOwn, stringAsRegExpStr, tryRegExp} from '@/js/util';
+import {hasOwn, stringAsRegExpStr} from '@/js/util';
 import {CodeMirror} from '@/cm';
 import {
   addSuffix, autocompleteOnTyping, Completion, execAt, findAllCssVars, getTokenState, isSameToken,
@@ -30,12 +30,7 @@ const rxPropOrEnd = /^([-a-z]*)(: ?|\()?$/i;
 const rxPropChars = /(\s*[-a-z(]+)?/yi;
 const rxPropEnd = /[\s:()]*/y;
 const rxVar = /(^|[^-.\w\u0080-\uFFFF])var\(-?/iyu;
-/** Using a string to avoid syntax error while loading this script in old browsers */
-const rxWordStart = __.MV3 ? /(?<![-\w]|#[0-9a-f]*)/
-  : tryRegExp('(?<![-\\w]|#[0-9a-f]*)');
-const rxWord = __.MV3 ? /(?<![-\w]|#[0-9a-f]*)[a-z][-a-z]+/gi
-  : rxWordStart ? tryRegExp('(?<![-\\w]|#[0-9a-f]*)[a-z][-a-z]+', 'gi')
-    : /\b[a-z][-a-z]+/gi;
+const rxWord = /(?<![-\w]|#[0-9a-f]*)[a-z][-a-z]+/gi;
 const cssMime = CodeMirror.mimeModes['text/css'];
 const docFuncs = addSuffix(cssMime.documentTypes, '(');
 const docFuncsStr = '\n' + docFuncs.join('\n');

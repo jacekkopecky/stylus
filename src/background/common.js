@@ -6,7 +6,7 @@ import {browserWindows} from '@/js/util-webext';
 export const bgPreInit = [];
 export const bgInit = [];
 /** @type {Map<string,Promise>} */
-export const clientDataJobs = __.MV3 && new Map();
+export const clientDataJobs = new Map();
 
 /** Temporary storage for data needed elsewhere e.g. in a content script */
 export const dataHub = {

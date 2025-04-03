@@ -26,7 +26,7 @@ const JS = 'js/';
 const SHIM = ROOT + 'tools/shim/';
 const SEP_ESC = escapeForRe(path.sep);
 const SRC_ESC = escapeForRe(SRC.replaceAll('/', path.sep));
-const PAGE_BG = MV3 ? 'background/sw' : 'background';
+const PAGE_BG = 'background/sw';
 const OFFSCREEN = 'offscreen';
 const PAGES = [
   'edit',
@@ -34,8 +34,7 @@ const PAGES = [
   'manage',
   'options',
   'popup',
-  !MV3 && PAGE_BG,
-].filter(Boolean);
+];
 const FS_CACHE = !DEV && !GITHUB_ACTIONS && process.env.STYLUS_FS_CACHE;
 const GET_CLIENT_DATA = 'get-client-data';
 const GET_CLIENT_DATA_TAG = {
@@ -115,7 +114,7 @@ const getTerserOptions = (cm, ovr) => ({
   [cm ? 'include' : 'exclude']: /node_modules|codemirror(?!-factory)/,
   extractComments: false,
   terserOptions: {
-    ecma: MV3 ? 2024 : 2017,
+    ecma: 2024,
     compress: {
       pure_getters: true,
       global_defs: Object.entries(ALIASES.funcs).reduce((res, [key, val]) => {
@@ -184,12 +183,6 @@ const getBaseConfig = () => ({
       }])(), {
         test: /\.(png|svg|jpe?g|gif|ttf)$/i,
         type: 'asset/resource',
-      }, !MV3 && {
-        test: /\.m?js(\?.*)?$/,
-        exclude: [CM_PACKAGE_PATH], // speedup: excluding known ES5 or ES6 libraries
-        loader: 'babel-loader',
-        options: {root: ROOT},
-        resolve: {fullySpecified: false},
       }, {
         loader: 'html-loader',
         test: new RegExp(SRC_ESC + String.raw`.*[/\\].*\.html$`),
@@ -282,8 +275,7 @@ function mergeCfg(ovr, base) {
     if (FS_CACHE) {
       ovr.cache = {
         ...ovr.cache,
-        // Differentiating by MV2/MV3 because targeted browsers are different in babel and postcss
-        name: [MV3 ? 'mv3' : 'mv2', ...entry].join('-'),
+        name: ['mv3', ...entry].join('-'),
       };
     }
     if (process.env.REPORT != null) {
@@ -352,7 +344,7 @@ function makeContentScript(name) {
 function makeManifest(files) {
   let [base, ovr] = (files[0].sourceFilename.endsWith(MANIFEST) ? files : files.reverse())
     .map(file => file.data.toString());
-  base = JSON.parse(MV3 ? base.replace('"browser_action"', '"action"') : base);
+  base = JSON.parse(base.replace('"browser_action"', '"action"'));
   ovr = JSON.parse(ovr);
   for (const [key, val] of Object.entries(ovr)) {
     const old = base[key];
@@ -374,10 +366,10 @@ function makeManifest(files) {
   if (CHANNEL) {
     base.name += ` (${CHANNEL})`;
   }
-  if (MV3 && CHANNEL === 'beta' && parseInt(ver) === 2) {
+  if (CHANNEL === 'beta' && parseInt(ver) === 2) {
     ver = base.version = 3 + ver.slice(1);
   }
-  if (MV3 && (DEBUG || DEV)) {
+  if ((DEBUG || DEV)) {
     base.permissions.push('declarativeNetRequestFeedback');
   }
   if (GITHUB_ACTIONS) {
@@ -432,7 +424,7 @@ module.exports = [
         ENTRY: true,
         THEMES: THEME_NAMES,
       }, {
-        IS_BG: MV3 ? 'false' : '(global._bg === true)',
+        IS_BG: 'false',
       }),
       ...addWrapper(INTRO + ', ' + INTRO_ALIASES + ';'),
       new MiniCssExtractPlugin({
@@ -448,7 +440,7 @@ module.exports = [
           const {bodyTags, headTags} = tags;
           // The main entry goes into BODY to improve performance (2x in manage.html)
           headTags.push(...bodyTags.splice(0, bodyTags.length - 1));
-          if (MV3) headTags.unshift(GET_CLIENT_DATA_TAG);
+          headTags.unshift(GET_CLIENT_DATA_TAG);
           return {
             compilation: compilation,
             webpackConfig: compilation.options,
@@ -487,7 +479,7 @@ module.exports = [
     resolve: RESOLVE_VIA_SHIM,
   }),
 
-  MV3 && mergeCfg({
+  mergeCfg({
     entry: `@/${PAGE_BG}`,
     plugins: [
       new RawEnvPlugin({
@@ -501,7 +493,7 @@ module.exports = [
     resolve: RESOLVE_VIA_SHIM,
   }),
 
-  MV3 && mergeCfg({
+  mergeCfg({
     entry: `@/${OFFSCREEN}`,
     output: {
       filename: JS + '[name].js',
@@ -520,12 +512,12 @@ module.exports = [
     resolve: RESOLVE_VIA_SHIM,
   }),
 
-  MV3 && mergeCfg(OUTPUT_MODULE, mergeCfg({
+  mergeCfg(OUTPUT_MODULE, mergeCfg({
     entry: '@/js/' + GET_CLIENT_DATA,
     output: {path: DST + JS},
   })),
 
-  MV3 && makeLibrary('db-to-cloud/lib/drive/webdav', 'webdav'),
+  makeLibrary('db-to-cloud/lib/drive/webdav', 'webdav'),
 
   makeContentScript('apply.js'),
   makeLibrary('@/js/worker.js', undefined, {

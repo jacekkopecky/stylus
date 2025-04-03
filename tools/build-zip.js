@@ -14,9 +14,7 @@ const WEBPACK_CLI = 'webpack-cli --no-stats';
 const ANY = 'any-';
 const STRIP_RE = new RegExp(`^${ANY}`);
 const TARGETS = [
-  ANY + 'mv2',
   'chrome-mv3',
-  'chrome-mv3-beta',
 ];
 
 (async function build([targets] = process.argv.slice(2)) {

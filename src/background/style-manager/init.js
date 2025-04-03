@@ -42,14 +42,14 @@ styleCache.setOnDeleted(val => {
 // Using ports to reliably track when the client is closed, however not for messaging,
 // because our `API` is much faster due to direct invocation.
 onDisconnect.draft = port => {
-  if (__.MV3) port[kResolve]();
+  port[kResolve]();
   const id = port.name.split(':')[1];
   draftsDB.delete(+id || id).catch(() => {
   });
 };
 
 onDisconnect.livePreview = port => {
-  if (__.MV3) port[kResolve]();
+  port[kResolve]();
   const id = +port.name.split(':')[1];
   const data = dataMap.get(id);
   if (!data) return;
@@ -57,13 +57,11 @@ onDisconnect.livePreview = port => {
   broadcastStyleUpdated(data.style, 'editPreviewEnd');
 };
 
-if (__.MV3) {
-  onConnect.draft = onConnect.livePreview = port => {
-    __.KEEP_ALIVE(new Promise(resolve => {
-      port[kResolve] = resolve;
-    }));
-  };
-}
+onConnect.draft = onConnect.livePreview = port => {
+  __.KEEP_ALIVE(new Promise(resolve => {
+    port[kResolve] = resolve;
+  }));
+};
 
 async function initStyleMap(styles, mirrored) {
   let fix, fixed, lost, i, style, len;

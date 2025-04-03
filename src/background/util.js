@@ -25,6 +25,4 @@ const getWorkerPortFromClient = async () => {
 };
 
 /** @type {WorkerAPI} */
-export const worker = __.MV3
-  ? createPortProxy(getWorkerPortFromClient, {lock: workerPath})
-  : createPortProxy(workerPath);
+export const worker = createPortProxy(getWorkerPortFromClient, {lock: workerPath});

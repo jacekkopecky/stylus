@@ -1,6 +1,6 @@
 import {BIT_DARK, BIT_SYS_DARK, kDark} from '@/js/consts';
 import * as prefs from '@/js/prefs';
-import {debounce, isCssDarkScheme} from '@/js/util';
+import {debounce} from '@/js/util';
 import {broadcastExtension} from './broadcast';
 import {bgBusy, bgPreInit, onSchemeChange} from './common';
 import {stateDB} from './db';
@@ -22,9 +22,8 @@ const map = {
 };
 export const SCHEMES = [kDark, kLight];
 export const isSystem = () => prefState === kSystem;
-export const refreshSystemDark = () => !__.MV3
-  ? setSystemDark(isCssDarkScheme())
-  : prefState === kSystem && offscreen.isDark().then(setSystemDark);
+export const refreshSystemDark = () => 
+  prefState === kSystem && offscreen.isDark().then(setSystemDark);
 /** @type {(val: !boolean) => void} */
 export const setSystemDark = update.bind(null, kSystem);
 export let isDark = null;
@@ -35,20 +34,15 @@ let timer;
 
 chrome.alarms.onAlarm.addListener(onAlarm);
 
-if (__.MV3) {
-  bgPreInit.push(stateDB.get(kDark).then(val => {
-    __.DEBUGLOG('colorScheme stateDB', val);
-    saved = +val;
-    if (typeof val === 'number') {
-      notified = isDark = !!(val & BIT_DARK);
-      map[kSystem] ??= !!(val & BIT_SYS_DARK); // e.g. clientDataJob did it
-      update();
-    }
-  }));
-} else {
-  saved = true;
-  refreshSystemDark();
-}
+bgPreInit.push(stateDB.get(kDark).then(val => {
+  __.DEBUGLOG('colorScheme stateDB', val);
+  saved = +val;
+  if (typeof val === 'number') {
+    notified = isDark = !!(val & BIT_DARK);
+    map[kSystem] ??= !!(val & BIT_SYS_DARK); // e.g. clientDataJob did it
+    update();
+  }
+}));
 
 prefs.subscribe(kSTATE, (_, val) => {
   __.DEBUGLOG('colorScheme pref', val);
@@ -117,7 +111,7 @@ function update(type, val) {
   __.DEBUGLOG('colorScheme update', type, val);
   if (type) {
     if (map[type] === val) return;
-    if (__.MV3 && type === kSystem)
+    if (type === kSystem)
       timer ??= setTimeout(writeState);
     map[type] = val;
     if (!prefState) return; // setClientData woke SW up, still starting

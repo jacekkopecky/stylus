@@ -6,7 +6,7 @@ import {tryJSONparse} from '@/js/util';
 const jobs = {};
 const kTimeoutFetching = 'Timeout fetching ';
 /** @param {AbortController} ctl */
-const callAbort = __.MV3 && ((ctl, url) => ctl.abort(kTimeoutFetching + url));
+const callAbort = ((ctl, url) => ctl.abort(kTimeoutFetching + url));
 
 /** @typedef DownloadParams
  * @prop {'GET' | 'POST' | 'HEAD' | string} [method]
@@ -70,8 +70,8 @@ async function doDownload(url, {
       headers ??= {[kContentType]: kAppUrlencoded};
     }
     /** @type {Response | XMLHttpRequest} */
-    const resp = __.MV3
-      ? await fetch(url, {
+    const resp = 
+      await fetch(url, {
         ...opts,
         body,
         method,
@@ -81,38 +81,13 @@ async function doDownload(url, {
           timer = setTimeout(callAbort, timeout, abort, url),
           abort.signal
         ),
-      })
-      : await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open(method, url);
-        abort = reject;
-        xhr.onerror = () => abort(xhr.status); // plain number is used in tryDownload()
-        xhr.onload = () => resolve(xhr);
-        xhr.onprogress = e => reportProgress(jobKey, [e.loaded, e.total]);
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState < 2) return; // XMLHttpRequest.HEADERS_RECEIVED
-          xhr.onreadystatechange = null;
-          xhr.timeout = loadTimeout;
-          resolve(xhr);
-        };
-        xhr.responseType = responseType;
-        if (headers) for (const k in headers) xhr.setRequestHeader(k, headers[k]);
-        if (timeout || loadTimeout) xhr.ontimeout = () => abort(new Error(kTimeoutFetching + url));
-        xhr.send(body);
       });
-    if (__.MV3) {
-      if (timer) clearTimeout(timer);
-      timer = loadTimeout && setTimeout(callAbort, loadTimeout, abort, url);
-    }
+    if (timer) clearTimeout(timer);
+    timer = loadTimeout && setTimeout(callAbort, loadTimeout, abort, url);
     if (requiredStatusCode && resp.status !== requiredStatusCode && !url.startsWith('file:')) {
       throw new Error(`Bad status code ${resp.status} for ${url}`);
     }
-    if (!__.MV3) {
-      data = await new Promise((resolve, reject) => {
-        abort = reject; // for xhr.onerror and xhr.ontimeout
-        resp.onload = () => resolve(resp.response);
-      });
-    } else if (port) {
+    if (port) {
       data = '';
       for await (const value of resp.body.pipeThrough(new TextDecoderStream()))
         reportProgress(jobKey, [(data += value).length]);
@@ -128,7 +103,7 @@ async function doDownload(url, {
     }
     return data;
   } finally {
-    if (__.MV3 && timer) clearTimeout(timer);
+    if (timer) clearTimeout(timer);
     jobs[jobKey].ports?.forEach(p => p.disconnect());
     delete jobs[jobKey];
   }
@@ -166,9 +141,7 @@ function expandUsoVars(usoVars, url, response) {
 function extractHeaders(src, headers) {
   const res = {};
   for (const h of headers) {
-    res[h] = __.MV3
-      ? src.headers.get(h)
-      : src.getResponseHeader(h);
+    res[h] = src.headers.get(h);
   }
   return res;
 }

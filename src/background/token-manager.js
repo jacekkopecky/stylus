@@ -3,10 +3,8 @@ import {DNR_ID_IDENTITY, updateSessionRules} from '@/js/dnr';
 import {chromeLocal} from '@/js/storage-util';
 import {FIREFOX} from '@/js/ua';
 import * as URLS from '@/js/urls';
-import {clamp, getHost} from '@/js/util';
+import {getHost} from '@/js/util';
 import {browserWindows} from '@/js/util-webext';
-import launchWebAuthFlow from 'webext-launch-web-auth-flow';
-import {isVivaldi} from './common';
 
 const AUTH = {
   dropbox: {
@@ -158,8 +156,7 @@ async function authUser(keys, name, interactive = false, hooks = null) {
   }
   hooks?.query(query);
   const url = `${provider.authURL}?${new URLSearchParams(query)}`;
-  const finalUrl = await (__.MV3 ? authUserMV3 : authUserMV2)(url, interactive,
-    redirectUri);
+  const finalUrl = await authUserMV3(url, interactive, redirectUri);
   const params = new URLSearchParams(
     provider.flow === 'token' ?
       new URL(finalUrl).hash.slice(1) :
@@ -190,28 +187,6 @@ async function authUser(keys, name, interactive = false, hooks = null) {
     result = await postQuery(provider.tokenURL, body);
   }
   return handleTokenResult(result, keys);
-}
-
-async function authUserMV2(url, interactive, redirectUri) {
-  alwaysUseTab ??= await isVivaldi;
-  const width = clamp(screen.availWidth - 100, 400, 800);
-  const height = clamp(screen.availHeight - 100, 200, 800);
-  const wnd = !alwaysUseTab && await browserWindows.getLastFocused();
-  return launchWebAuthFlow({
-    url,
-    alwaysUseTab,
-    interactive,
-    redirect_uri: redirectUri,
-    windowOptions: wnd && Object.assign({
-      state: 'normal',
-      width,
-      height,
-    }, wnd.state !== 'minimized' && {
-      // Center the popup to the current window
-      top: Math.ceil(wnd.top + (wnd.height - width) / 2),
-      left: Math.ceil(wnd.left + (wnd.width - width) / 2),
-    }),
-  });
 }
 
 async function authUserMV3(url, interactive, redirectUri) {

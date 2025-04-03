@@ -7,7 +7,7 @@ for (const {prototype} of [Document, DocumentFragment, Element]) {
   prototype.$$ = prototype.querySelectorAll;
 }
 
-export const cssFieldSizing = __.MV3 || CSS.supports('field-sizing', 'content');
+export const cssFieldSizing = true;
 export const dom = {};
 
 const detachments = new WeakMap();

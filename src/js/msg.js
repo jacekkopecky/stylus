@@ -1,5 +1,4 @@
 import {k_busy, kInvokeAPI} from '@/js/consts';
-import {bgReadySignal} from './msg-api';
 
 /** @type {Map<function,boolean>} true: returned value is used as the reply */
 export const onMessage = new Map();
@@ -51,9 +50,6 @@ export function _execute(data, sender, multi) {
 }
 
 function onRuntimeMessage({data, multi, TDM}, sender, sendResponse) {
-  if (!__.MV3 && !__.IS_BG && data.method === 'backgroundReady') {
-    bgReadySignal?.(true);
-  }
   if (__.ENTRY === true && !__.IS_BG && data.method === kInvokeAPI) {
     return;
   }

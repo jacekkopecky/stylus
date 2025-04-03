@@ -29,7 +29,7 @@ const STATES = /** @namespace UpdaterStates */ {
 };
 export const getStates = () => STATES;
 const NOP = () => {};
-const safeSleep = __.MV3 ? ms => __.KEEP_ALIVE(sleep(ms)) : sleep;
+const safeSleep = ms => __.KEEP_ALIVE(sleep(ms));
 const RH_ETAG = {responseHeaders: ['etag']}; // a hashsum of file contents
 const RX_DATE2VER = new RegExp([
   /^(\d{4})/,

@@ -1,6 +1,6 @@
 import colorMimicry from '@/js/color/color-mimicry';
 import {kCodeMirror} from '@/js/consts';
-import {cssFieldSizing, $toggleDataset, $create} from '@/js/dom';
+import {$toggleDataset, $create} from '@/js/dom';
 import {setInputValue} from '@/js/dom-util';
 import {htmlToTemplateCache, templateCache} from '@/js/localization';
 import {chromeLocal} from '@/js/storage-util';
@@ -107,7 +107,6 @@ const EVENTS = {
   oninput() {
     stateFind = stateInput.value;
     debounce(doSearch, INCREMENTAL_SEARCH_DELAY, {canAdvance: false});
-    if (!__.MV3 && !cssFieldSizing) adjustTextareaSize(this);
     if (!stateFind) enableReplaceButtons(false);
   },
   onkeydown(event) {
@@ -147,7 +146,6 @@ const INPUT_PROPS = {
 const INPUT2_PROPS = {
   oninput() {
     stateReplace = this.value;
-    if (!__.MV3 && !cssFieldSizing) adjustTextareaSize(this);
     debounce(writeStorage, STORAGE_UPDATE_DELAY);
   },
 };
@@ -602,9 +600,7 @@ function createDialog(type) {
   document.body.appendChild(dialog);
   dispatchEvent(new Event('showHotkeyInTooltip'));
 
-  if (!__.MV3 && !cssFieldSizing) adjustTextareaSize(stateInput);
   if (type === 'replace') {
-    if (!__.MV3 && !cssFieldSizing) adjustTextareaSize(stateInput2);
     enableReplaceButtons(stateFind !== '');
     enableUndoButton(stateUndoHistory.length);
   }
@@ -636,20 +632,6 @@ function destroyDialog({restoreFocus = false} = {}) {
     saveWindowScrollPos();
     restoreWindowScrollPos({immediately: false});
   }
-}
-
-function adjustTextareaSize(el) {
-  const sw = el.scrollWidth;
-  const cw = el.clientWidth;
-  const w = sw > cw && ((sw / 50 | 0) + 1) * 50;
-  if (!w || w === cw) return;
-  el.style.width = w + 'px';
-  const ovrX = el.scrollWidth > el.clientWidth; // recalculate
-  const numLines = el.value.split('\n').length + ovrX;
-  if (numLines !== Number(el.rows)) {
-    el.rows = numLines;
-  }
-  el.style.overflowX = ovrX ? '' : 'hidden';
 }
 
 function enableReplaceButtons(enabled) {
