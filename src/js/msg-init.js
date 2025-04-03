@@ -14,7 +14,7 @@ const needsTab = [
 const swExec = createPortExec(() => navigator.serviceWorker.controller, {lock: swPath});
 const workerApiPrefix = 'worker.';
 let workerProxy;
-export let bg = __.IS_BG ? self : false;
+export const bg = __.IS_BG ? self : false;
 
 async function invokeAPI({name: path}, _thisObj, args) {
   // Non-cloneable event is passed when doing `elem.onclick = API.foo`

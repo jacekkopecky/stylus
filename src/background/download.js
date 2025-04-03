@@ -70,7 +70,7 @@ async function doDownload(url, {
       headers ??= {[kContentType]: kAppUrlencoded};
     }
     /** @type {Response | XMLHttpRequest} */
-    const resp = 
+    const resp =
       await fetch(url, {
         ...opts,
         body,

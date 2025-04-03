@@ -7,7 +7,7 @@ import * as URLS from '@/js/urls';
 import {getHost, RX_META} from '@/js/util';
 import {bgBusy, onTabUrlChange} from './common';
 import download from './download';
-import tabCache, * as tabMan from './tab-manager';
+import tabCache from './tab-manager';
 import {openURL} from './tab-util';
 
 const installCodeCache = {};
@@ -70,12 +70,6 @@ function clearInstallCode(url) {
   delete installCodeCache[url];
 }
 
-/** Ignoring .user.css response that is not a plain text but a web page.
- * Not using a whitelist of types as the possibilities are endless e.g. text/x-css-stylus */
-function isContentTypeText(type) {
-  return /^text\/(?!html)/i.test(type);
-}
-
 // in Firefox we have to use a content script to read file://
 async function loadFromFile(tabId) {
   return (await browser.tabs.executeScript(tabId, {
@@ -94,14 +88,6 @@ function makeInstallerUrl(url) {
   return `${URLS.ownRoot}${URLS.installUsercss}?updateUrl=${encodeURIComponent(url)}`;
 }
 
-function reduceUsercssGlobs(res, host) {
-  res.push(...'%css,%less,%styl'
-    .replace(/%\w+/g, host ? '$&*' : '$&,$&?*')
-    .replace(/%/g, `${host || '*://*/'}*.user.`)
-    .split(','));
-  return res;
-}
-
 async function maybeInstall(tabId, url, oldUrl = '') {
   if (url.includes('.user.') &&
       tabCache[tabId]?.[MIME] !== false &&
@@ -113,18 +99,6 @@ async function maybeInstall(tabId, url, oldUrl = '') {
     if (!/^\s*</.test(code) && RX_META.test(code)) {
       await openInstallerPage(tabId, url, {code, inTab});
     }
-  }
-}
-
-function maybeInstallByMime({tabId, url, responseHeaders}) {
-  const h = responseHeaders.find(_ => _.name.toLowerCase() === kContentType);
-  const isText = h && isContentTypeText(h.value);
-  tabMan.set(tabId, MIME, isText);
-  if (isText) {
-    openInstallerPage(tabId, url, {});
-    // Silently suppress navigation.
-    // Don't redirect to the install URL as it'll flash the text!
-    return {cancel: true};
   }
 }
 

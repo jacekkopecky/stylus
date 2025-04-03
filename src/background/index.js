@@ -2,7 +2,7 @@ import './intro';
 import '@/js/browser';
 import {kInstall, kInvokeAPI, kResolve} from '@/js/consts';
 import {DNR, getRuleIds, updateDynamicRules, updateSessionRules} from '@/js/dnr';
-import {_execute, onMessage} from '@/js/msg';
+import {onMessage} from '@/js/msg';
 import {API} from '@/js/msg-api';
 import * as prefs from '@/js/prefs';
 import {chromeSession} from '@/js/storage-util';
