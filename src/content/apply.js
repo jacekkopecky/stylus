@@ -21,7 +21,7 @@ if (isFrame) {
 const isFrameNoUrl = isFrameSameOrigin && location.protocol === 'about:';
 
 /** Polyfill for documentId in Firefox and Chrome pre-106 */
-const instanceId = (FF || !__.MV3 && !CSS.supports('top', '1ic')) && Math.random() || 0;
+const instanceId = FF && Math.random() || 0;
 /** about:blank iframes are often used by sites for file upload or background tasks,
  * and they may break if unexpected DOM stuff is present at `load` event
  * so we'll add the styles only if the iframe becomes visible */
@@ -31,7 +31,7 @@ const NAV_ID = 'url:' + runtime.id;
 /** Firefox disallows direct access to global variables in the parent's "isolated world".
  * Chrome 63 and older can't construct EventTarget, so we detect them via ResizeObserver,
  * using a typeof check to skip an implicit global for <html id="ResizeObserver"> */
-const navHubGlobal = FF || !__.MV3 && typeof ResizeObserver !== 'function';
+const navHubGlobal = FF;
 const navHub = navHubGlobal ? global : global[NAV_ID] = new EventTarget();
 const navHubParent = isFrameNoUrl && (navHubGlobal ? parent : parent[NAV_ID]) || null;
 
@@ -79,7 +79,7 @@ async function init() {
   if (isUnstylable) return API.styleViaAPI({method: 'styleApply'});
   let data;
   if (__.ENTRY && (data = global[__.CLIENT_DATA])) {
-    data = (/**@type{StylusClientData}*/__.MV3 ? data : await data).apply;
+    data = (/**@type{StylusClientData}*/data).apply;
   } else {
     data = isFrameNoUrl && !FF && clone(parent[parent.Symbol.for(SYM_ID)]);
     if (data) await new Promise(onFrameElementInView);
@@ -202,7 +202,7 @@ function updateConfig({cfg}) {
     if (k === 'off') updateDisableAll();
     else if (k === 'order') styleInjector.sort();
     else if (k === 'top') updateExposeIframes();
-    else if (k === 'wake' && __.MV3) updatePort();
+    else if (k === 'wake') updatePort();
     else styleInjector.updateConfig(own.cfg);
   }
 }
@@ -242,10 +242,10 @@ function updateCount() {
 }
 
 function updatePort() {
-  if (!(__.MV3 && own.cfg.wake) && !styleInjector.list.length) {
+  if (!own.cfg.wake && !styleInjector.list.length) {
     port?.disconnect();
     port = null;
-  } else if (!port && (isFrame || __.MV3 && own.cfg.wake)) {
+  } else if (!port && (isFrame || own.cfg.wake)) {
     port = runtime.connect({name: kApplyPort});
     port.onDisconnect.addListener(onPortDisconnected);
   }
@@ -286,7 +286,7 @@ function onBFCache(e) {
 }
 
 function onPortDisconnected() {
-  if (__.MV3 && own.cfg.wake)
+  if (own.cfg.wake)
     addEventListener('mousedown', wakeUpSW, true);
   port = null;
 }
@@ -320,7 +320,7 @@ function selfDestruct() {
   if (mqDark) mqDark = mqDark.onchange = null;
   if (offscreen) for (const fn of offscreen) fn();
   if (TDM < 0) document.onprerenderingchange = null;
-  if (__.MV3) removeEventListener('mousedown', wakeUpSW, true);
+  removeEventListener('mousedown', wakeUpSW, true);
   navHubParent?.removeEventListener(NAV_ID, onUrlChanged, true);
   offscreen = null;
   styleInjector.shutdown();

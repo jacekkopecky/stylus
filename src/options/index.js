@@ -3,12 +3,12 @@ import '@/js/browser';
 import {pKeepAlive} from '@/js/consts';
 import {$create} from '@/js/dom';
 import {getEventKeyName, messageBox, setInputValue, setupLivePrefs} from '@/js/dom-util';
-import {htmlToTemplate, tBody, template, templateCache} from '@/js/localization';
+import {htmlToTemplate, tBody, templateCache} from '@/js/localization';
 import {API} from '@/js/msg-api';
 import * as prefs from '@/js/prefs';
 import {FIREFOX, MAC, OPERA} from '@/js/ua';
 import {clamp, t} from '@/js/util';
-import {CHROME_POPUP_BORDER_BUG, ignoreChromeError} from '@/js/util-webext';
+import {ignoreChromeError} from '@/js/util-webext';
 import './options-sync';
 import '@/css/onoffswitch.css';
 import './options.css';
@@ -16,7 +16,7 @@ import shortcutsFF from './shortcuts-ff.html';
 
 tBody();
 $$('input[min], input[max]').forEach(enforceInputRange);
-$('#FOUC .items').textContent = t(__.MV3 ? 'optionFOUCMV3' : 'optionFOUCMV2')
+$('#FOUC .items').textContent = t('optionFOUCMV3')
   .replace('<a>', t('optionsAdvancedStyleViaXhr'))
   .replace('<b>', t('optionKeepAlive'));
 $id(pKeepAlive).previousElementSibling.firstChild.textContent +=
@@ -24,9 +24,6 @@ $id(pKeepAlive).previousElementSibling.firstChild.textContent +=
   t('optionKeepAlive2').trim();
 for (const el of $$('[show-if]')) {
   prefs.subscribe(el.getAttribute('show-if').match(/[.\w]+/)[0], toggleShowIf, true);
-}
-if (!__.MV3 && __.BUILD !== 'firefox' && CHROME_POPUP_BORDER_BUG) {
-  $id('popupWidth').closest('.items').append(template.popupBorders);
 }
 window.on('keydown', event => {
   if (getEventKeyName(event) === 'Escape') {
@@ -71,7 +68,7 @@ for (const el of $$('[data-clickable]')) {
   el.firstChild.replaceWith(p[1], span, p[3]);
 }
 (async () => {
-  const {wrb} = __.MV3 ? prefs.clientData : await prefs.clientData;
+  const {wrb} = prefs.clientData;
   setupLivePrefs();
   if (wrb === false) {
     for (let el of $$('#patchCsp')) {

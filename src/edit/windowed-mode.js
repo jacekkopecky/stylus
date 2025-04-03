@@ -31,7 +31,6 @@ async function initWindowedMode() {
   if (isSimple) EmbeddedPopup();
   editor.isWindowed = isSimple || (
     history.length === 1 &&
-    (__.MV3 || await prefs.ready, prefs.__values['openEditInWindow']) &&
     (await browserWindows.getAll()).length > 1 &&
     (await browser.tabs.query({currentWindow: true})).length === 1
   );

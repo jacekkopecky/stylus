@@ -1,6 +1,6 @@
 import './intro';
 import '@/js/browser';
-import {k_msgExec, kInstall, kInvokeAPI, kResolve} from '@/js/consts';
+import {kInstall, kInvokeAPI, kResolve} from '@/js/consts';
 import {DNR, getRuleIds, updateDynamicRules, updateSessionRules} from '@/js/dnr';
 import {_execute, onMessage} from '@/js/msg';
 import {API} from '@/js/msg-api';
@@ -8,7 +8,7 @@ import * as prefs from '@/js/prefs';
 import {chromeSession} from '@/js/storage-util';
 import {CHROME, FIREFOX, MOBILE, WINDOWS} from '@/js/ua';
 import {sleep} from '@/js/util';
-import {broadcast, pingTab} from './broadcast';
+import {pingTab} from './broadcast';
 import './broadcast-injector-config';
 import initBrowserCommandsApi from './browser-cmd-hotkeys';
 import {setSystemDark} from './color-scheme';
@@ -19,7 +19,6 @@ import {draftsDB, mirrorStorage, prefsDB, stateDB} from './db';
 import download from './download';
 import {refreshIconsWhenReady, updateIconBadge} from './icon-manager';
 import {setPrefs} from './prefs-api';
-import setClientData from './set-client-data';
 import * as styleMan from './style-manager';
 import * as styleCache from './style-manager/cache';
 import {dataMap} from './style-manager/util';
@@ -62,14 +61,6 @@ Object.assign(API, /** @namespace API */ {
 
   //#endregion
 
-}, !__.MV3 && /** @namespace API */ {
-
-  //#region API for MV2
-
-  setClientData,
-
-  //#endregion
-
 }, __.BUILD !== 'chrome' && FIREFOX && initStyleViaApi());
 
 //#region Events
@@ -89,34 +80,28 @@ chrome.runtime.onInstalled.addListener(({reason, previousVersion}) => {
   (bgPreInit.length ? bgPreInit : bgInit).push(
     styleCache.clear(),
   );
-  if (__.MV3) {
-    (bgPreInit.length ? bgPreInit : bgInit).push(
-      stateDB.clear(),
-      DNR.getDynamicRules().then(rules => updateDynamicRules(undefined, getRuleIds(rules)))
-        .then(() => prefs.ready)
-        .then(() => usercssMan.toggleUrlInstaller()),
-      DNR.getSessionRules().then(rules => updateSessionRules(undefined, getRuleIds(rules))),
-    );
-    refreshIconsWhenReady();
-  }
+  (bgPreInit.length ? bgPreInit : bgInit).push(
+    stateDB.clear(),
+    DNR.getDynamicRules().then(rules => updateDynamicRules(undefined, getRuleIds(rules)))
+      .then(() => prefs.ready)
+      .then(() => usercssMan.toggleUrlInstaller()),
+    DNR.getSessionRules().then(rules => updateSessionRules(undefined, getRuleIds(rules))),
+  );
+  refreshIconsWhenReady();
   (async () => {
     if (bgBusy) await bgBusy;
     mirrorStorage(dataMap);
   })();
 });
 
-if (__.MV3) {
-  chromeSession.get('init', async ({init}) => {
-    __.DEBUGLOG('new session:', !init);
-    if (init) return;
-    chromeSession.set({init: true});
-    onStartup();
-    await bgBusy;
-    reinjectContentScripts();
-  });
-} else {
-  chrome.runtime.onStartup.addListener(onStartup);
-}
+chromeSession.get('init', async ({init}) => {
+  __.DEBUGLOG('new session:', !init);
+  if (init) return;
+  chromeSession.set({init: true});
+  onStartup();
+  await bgBusy;
+  reinjectContentScripts();
+});
 
 async function onStartup() {
   await refreshIconsWhenReady();
@@ -150,9 +135,5 @@ onMessage.set((m, sender) => {
   if (__.BUILD !== 'chrome' && FIREFOX) {
     initBrowserCommandsApi();
     initContextMenus();
-  }
-  if (!__.MV3) {
-    global[k_msgExec] = _execute;
-    broadcast({method: 'backgroundReady'});
   }
 })();

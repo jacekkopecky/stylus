@@ -11,17 +11,6 @@ export const COLORVIEW_SWATCH_PROP = `--${COLORVIEW_SWATCH_CLASS}`;
 const CLOSE_POPUP_EVENT = 'close-colorpicker-popup';
 
 const {RX_COLOR, testAt} = colorConverter;
-const RX_UNSUPPORTED = !__.MV3 && (s => s && new RegExp(s))([
-  !CSS.supports('color', '#abcd') && /#(.{4}){1,2}$/,
-  !CSS.supports('color', 'hwb(1 0% 0%)') && /^hwb\(/,
-  !CSS.supports('color', 'rgb(1e2,0,0)') && /\de/,
-  !CSS.supports('color', 'rgb(1.5,0,0)') &&
-  /^rgba?\((([^,]+,){0,2}[^,]*\.|(\s*\S+\s+){0,2}\S*\.)/,
-  !CSS.supports('color', 'rgb(1,2,3,.5)') && /[^a]\(([^,]+,){3}/,
-  !CSS.supports('color', 'rgb(1,2,3,50%)') && /\((([^,]+,){3}|(\s*\S+[\s/]+){3}).*?%/,
-  !CSS.supports('color', 'rgb(1 2 3 / 1)') && /^[^,]+$/,
-  !CSS.supports('color', 'hsl(1turn, 2%, 3%)') && /deg|g?rad|turn/,
-].filter(Boolean).map(rx => rx.source).join('|'));
 const RX_DETECT = new RegExp('(^|[\\s(){}[\\]:,/"=])' +
   '(' +
     RX_COLOR.hex.source + '|' +
@@ -371,7 +360,7 @@ function colorizeLineViaStyles(state, lineHandle, styleIndex = 1) {
     const spanState = markedSpans && checkSpan();
     if (spanState === 'same') continue;
     if (checkColor()) {
-      (spanState ? redeem : mark)(getSafeColorValue());
+      (spanState ? redeem : mark)(color);
     }
   }
 
@@ -404,13 +393,6 @@ function colorizeLineViaStyles(state, lineHandle, styleIndex = 1) {
       css: COLORVIEW_SWATCH_PROP + ':' + colorValue,
       color,
     });
-  }
-
-  function getSafeColorValue() {
-    if (isHex && color.length !== 5 && color.length !== 9) return color;
-    if (!RX_UNSUPPORTED || !RX_UNSUPPORTED.test(color)) return color;
-    const value = colorConverter.parse(color);
-    return colorConverter.format(value, 'rgb');
   }
 
   // update or skip or delete existing swatches

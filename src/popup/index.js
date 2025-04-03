@@ -10,7 +10,7 @@ import {isDark, onDarkChanged} from '@/js/themer';
 import {CHROME, FIREFOX, MOBILE, OPERA} from '@/js/ua';
 import {ownRoot} from '@/js/urls';
 import {capitalize, clamp, clipString, sleep0, stringAsRegExpStr, t} from '@/js/util';
-import {CHROME_POPUP_BORDER_BUG, getActiveTab, MF} from '@/js/util-webext';
+import {getActiveTab, MF} from '@/js/util-webext';
 import * as Events from './events';
 import './hotkeys';
 import '@/css/onoffswitch.css';
@@ -30,7 +30,7 @@ const TPL_STYLE = template.style;
 const xo = new IntersectionObserver(onIntersect);
 
 (async () => {
-  const data = (__.MV3 ? prefs.clientData : await prefs.clientData)[kPopup];
+  const data = prefs.clientData[kPopup];
   initPopup(...data);
   showStyles(...data);
   prevHeight = Math.max(innerHeight, 150);
@@ -51,13 +51,6 @@ prefs.subscribe('disableAll', (key, val) => {
   $id('disableAll-label').title = t('masterSwitch') + ':\n' +
     t(val ? 'disableAllStylesOff' : 'genericEnabledLabel');
 }, true);
-if (!__.MV3 && __.BUILD !== 'firefox' && CHROME_POPUP_BORDER_BUG) {
-  prefs.subscribe('popup.borders', toggleSideBorders, true);
-}
-if (!__.MV3 && CHROME >= 66 && CHROME <= 69) {
-  // Chrome 66-69 adds a gap, https://crbug.com/821143
-  $root.style.overflow = 'overlay';
-}
 
 function onRuntimeMessage(msg) {
   if (!tabUrl) return;

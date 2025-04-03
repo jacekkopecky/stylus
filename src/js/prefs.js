@@ -1,7 +1,7 @@
 /** Don't use this file in content script context! */
 import {k_busy} from '@/js/consts';
 import {API} from './msg-api';
-import {deepCopy, deepEqual, isCssDarkScheme, makePropertyPopProxy} from './util';
+import {deepCopy, deepEqual} from './util';
 import {onStorageChanged} from './util-webext';
 import './msg-init'; // installs direct `API` handler
 
@@ -9,15 +9,7 @@ let busy, ready, setReady;
 let toUpload;
 
 /** @type {StylusClientData & {then: (cb: (data: StylusClientData) => ?) => Promise}} */
-export const clientData = !__.IS_BG && (
-  __.MV3
-    ? global[__.CLIENT_DATA]
-    : API.setClientData({url: location.href, dark: isCssDarkScheme()}).then(data => {
-      data = makePropertyPopProxy(data);
-      setAll(data.prefs);
-      return data;
-    })
-);
+export const clientData = !__.IS_BG && global[__.CLIENT_DATA];
 
 const defaults = {
   __proto__: null,
@@ -256,12 +248,10 @@ function setAll(data, fromStorage) {
 if (__.IS_BG) {
   busy = ready = new Promise(cb => (setReady = cb));
   busy.set = (...args) => setReady(setAll(...args));
-} else if (__.MV3) {
+} else {
   setAll(clientData.prefs);
   ready = Promise.resolve();
   ready.then = fn => fn(); // run synchronously in the same microtick because the data is ready
-} else {
-  busy = ready = clientData;
 }
 
 onStorageChanged.addListener((changes, area) => {

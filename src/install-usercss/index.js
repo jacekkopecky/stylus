@@ -12,7 +12,6 @@ import {isLocalhost} from '@/js/urls';
 import {clipString, debounce, deepEqual, sessionStore, t, tryURL} from '@/js/util';
 import {closeCurrentTab} from '@/js/util-webext';
 import DirectDownloader from './direct-downloader';
-import PortDownloader from './port-downloader';
 import htmlStyleOpts from '../edit/style-settings.html';
 import '../edit/settings.css';
 import './install-usercss.css';
@@ -76,9 +75,6 @@ setTimeout(() => !cm && showSpinner($id('header')), 200);
     firstGet = API.usercss.getInstallCode(initialUrl)
       .then(code => code || getData())
       .catch(getData);
-  } else if (!__.MV3) {
-    getData = PortDownloader(initialUrl, tabId);
-    firstGet = getData({force: true});
   }
 
   const hasFileAccessP = browser.extension.isAllowedFileSchemeAccess();

@@ -10,8 +10,9 @@ const ROOT = path.dirname(__dirname.replaceAll('\\', '/')) + '/';
 const SRC = ROOT + 'src/';
 
 const [TARGET, ZIP] = process.env.NODE_ENV?.split(':') || [''];
-const [BUILD, FLAVOR, CHANNEL] = TARGET.split('-');
-const MV3 = FLAVOR === 'mv3';
+const [BUILD, , CHANNEL] = TARGET.split('-');
+const FLAVOR = 'mv3';
+const MV3 = true;
 const DEV = process.env.npm_lifecycle_event?.startsWith('watch');
 
 /** Nuking redundant quotes https://html.spec.whatwg.org/multipage/syntax.html#syntax-attributes */

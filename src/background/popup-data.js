@@ -22,7 +22,7 @@ export default async function makePopupData() {
   const td = tabCache[tab.id];
   const isOwn = url.startsWith(ownRoot);
   const [
-    ping0 = __.MV3 && !td?.[kPopup] && (
+    ping0 = !td?.[kPopup] && (
       tabMan.set(tab.id, kPopup, true),
       await reinjectContentScripts(tab)
     ),
@@ -90,14 +90,8 @@ export default async function makePopupData() {
 
 /** webNavigation.getAllFrames doesn't work in Chrome on own pages */
 async function getAllFrames(url, {id: tabId}) {
-  let res;
-  if (__.MV3) {
-    res = await chrome.runtime.getContexts({tabIds: [tabId]});
-    res = res[1]?.documentUrl;
-  } else {
-    // first 0 = view, second 0 = iframe inside
-    res = chrome.extension.getViews({tabId: tabId})[0]?.[0]?.location.href;
-  }
+  let res = await chrome.runtime.getContexts({tabIds: [tabId]});
+  res = res[1]?.documentUrl;
   return [
     {frameId: 0, url},
     res && {frameId: 1, parentFrameId: 0, url: res},

@@ -3,7 +3,7 @@ import * as chromeSync from '@/js/chrome-sync';
 import * as prefs from '@/js/prefs';
 import {chromeLocal} from '@/js/storage-util';
 import * as STATES from '@/js/sync-util';
-import {fetchWebDAV, hasOwn, t, tryURL} from '@/js/util';
+import {hasOwn, t, tryURL} from '@/js/util';
 import {broadcastExtension} from './broadcast';
 import {bgBusy, uuidIndex} from './common';
 import {db} from './db';
@@ -168,7 +168,7 @@ export async function syncNow() {
       status.login = false;
     }
   }
-  if (__.MV3 && resolveOnSync) {
+  if (resolveOnSync) {
     resolveOnSync();
     resolveOnSync = null;
   }
@@ -280,8 +280,7 @@ async function getDrive(name) {
     prefs.set(PREF_ID, 'none');
     throw new Error('Broken options: WebDAV server URL is missing');
   }
-  if (!__.MV3 || !webdav) opts.getAccessToken = () => getToken(name);
-  if (!__.MV3 && webdav) opts.fetch = fetchWebDAV.bind(opts);
+  if (!webdav) opts.getAccessToken = () => getToken(name);
   return cloudDrive[name](opts);
 }
 
@@ -304,7 +303,7 @@ async function schedule(isInit, prefVal = curDriveName) {
       delayInMinutes: isInit ? SYNC_INIT_DELAY : SYNC_DELAY,
       periodInMinutes: SYNC_INTERVAL,
     });
-    if (__.MV3 && !resolveOnSync) {
+    if (!resolveOnSync) {
       __.KEEP_ALIVE(new Promise(cb => (resolveOnSync = cb)));
     }
   }

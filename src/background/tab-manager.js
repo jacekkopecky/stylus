@@ -36,7 +36,7 @@ export const set = (tabId, ...args) => {
   }
   if (!del) obj[lastKey] = value;
   else if (obj) delete obj[lastKey];
-  if (__.MV3 && bgMortal) stateDB.put(obj0, tabId);
+  if (bgMortal) stateDB.put(obj0, tabId);
   return value;
 };
 
@@ -51,7 +51,7 @@ export const someInjectable = () => {
 
 export const remove = tabId => {
   delete cache[tabId];
-  if (__.MV3 && bgMortal) stateDB.delete(tabId);
+  if (bgMortal) stateDB.delete(tabId);
 };
 
 const putObject = obj => stateDB.putMany(
@@ -59,44 +59,42 @@ const putObject = obj => stateDB.putMany(
   Object.keys(obj).map(Number)
 );
 
-export const bgMortalChanged = __.MV3 && new Set();
+export const bgMortalChanged = new Set();
 let bgMortal;
 
 bgInit.push(async () => {
   const [saved, tabs] = await Promise.all([
-    __.MV3 && (bgMortal = prefs.__values[pKeepAlive] >= 0)
+    (bgMortal = prefs.__values[pKeepAlive] >= 0)
       && stateDB.getAll(IDBKeyRange.bound(0, 1e99)),
     browser.tabs.query({}),
   ]);
   let toPut;
   for (const {id, url} of tabs) {
     let data;
-    if (!__.MV3 || !saved || !(data = saved[id]) || data[kUrl]?.[0] !== url) {
+    if (!saved || !(data = saved[id]) || data[kUrl]?.[0] !== url) {
       data = {[kUrl]: {0: url}};
-      if (__.MV3 && saved)
+      if (saved)
         (toPut ??= {})[id] = data;
     }
     cache[id] = data;
   }
-  if (__.MV3) {
-    if (saved) {
-      let toDel;
-      for (const id in saved)
-        if (!cache[id])
-          (toDel ??= []).push(id);
-      if (toDel) stateDB.deleteMany(toDel);
-      if (toPut) putObject(toPut);
-    }
-    prefs.subscribe(pKeepAlive, (key, val) => {
-      val = val >= 0;
-      if (bgMortal !== val) {
-        bgMortal = val;
-        if (val) putObject(cache);
-        else stateDB.delete(IDBKeyRange.bound(0, 1e99));
-        for (const fn of bgMortalChanged) fn(val);
-      }
-    });
+  if (saved) {
+    let toDel;
+    for (const id in saved)
+      if (!cache[id])
+        (toDel ??= []).push(id);
+    if (toDel) stateDB.deleteMany(toDel);
+    if (toPut) putObject(toPut);
   }
+  prefs.subscribe(pKeepAlive, (key, val) => {
+    val = val >= 0;
+    if (bgMortal !== val) {
+      bgMortal = val;
+      if (val) putObject(cache);
+      else stateDB.delete(IDBKeyRange.bound(0, 1e99));
+      for (const fn of bgMortalChanged) fn(val);
+    }
+  });
 });
 
 bgBusy.then(() => {
@@ -115,7 +113,7 @@ bgBusy.then(() => {
       obj[kUrl] = {0: url};
     else
       (obj[kUrl] ??= {})[frameId] = url;
-    if (__.MV3 && bgMortal)
+    if (bgMortal)
       stateDB.put(obj, tabId);
     if (frameId) return;
     for (const fn of onTabUrlChange) fn(tabId, url, oldUrl);

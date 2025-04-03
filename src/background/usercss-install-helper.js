@@ -29,7 +29,7 @@ export function getInstallCode(url) {
 function toggle(key, val, isInit) {
   if (val) onTabUrlChange.add(maybeInstall);
   else onTabUrlChange.delete(maybeInstall);
-  if (!__.MV3 || !isInit) toggleUrlInstaller(val);
+  if (!isInit) toggleUrlInstaller(val);
 }
 
 export function toggleUrlInstaller(val = prefs.__values[kUrlInstaller]) {
@@ -41,37 +41,29 @@ export function toggleUrlInstaller(val = prefs.__values[kUrlInstaller]) {
     ...URLS.usoaRaw,
     ...['greasy', 'sleazy'].map(h => `https://update.${h}fork.org/`),
   ];
-  if (__.MV3) {
-    updateDynamicRules([{
-      id: DNR_ID_INSTALLER,
-      condition: {
-        regexFilter: (val
-          ? /^.*\.user\.(?:css|less|styl)(?:\?.*)?$/
-          : /^.*\.user\.css$/).source,
-        requestDomains: val
-          ? undefined
-          : [...new Set(urls.map(getHost))],
-        resourceTypes: [kMainFrame],
-        responseHeaders: [{
-          header: kContentType,
-          values: ['text/*'],
-          excludedValues: ['text/html*'], // * excludes charset and whatnot
-        }],
+  updateDynamicRules([{
+    id: DNR_ID_INSTALLER,
+    condition: {
+      regexFilter: (val
+        ? /^.*\.user\.(?:css|less|styl)(?:\?.*)?$/
+        : /^.*\.user\.css$/).source,
+      requestDomains: val
+        ? undefined
+        : [...new Set(urls.map(getHost))],
+      resourceTypes: [kMainFrame],
+      responseHeaders: [{
+        header: kContentType,
+        values: ['text/*'],
+        excludedValues: ['text/html*'], // * excludes charset and whatnot
+      }],
+    },
+    action: {
+      type: 'redirect',
+      redirect: {
+        regexSubstitution: chrome.runtime.getURL(URLS.installUsercss + '#\\0'),
       },
-      action: {
-        type: 'redirect',
-        redirect: {
-          regexSubstitution: chrome.runtime.getURL(URLS.installUsercss + '#\\0'),
-        },
-      },
-    }]);
-  } else {
-    chrome.webRequest.onHeadersReceived.removeListener(maybeInstallByMime);
-    chrome.webRequest.onHeadersReceived.addListener(maybeInstallByMime, {
-      urls: urls.reduce(reduceUsercssGlobs, []),
-      types: [kMainFrame],
-    }, ['responseHeaders', 'blocking']);
-  }
+    },
+  }]);
 }
 
 function clearInstallCode(url) {

@@ -16,7 +16,7 @@ import './manage-newui.css';
 tBody();
 
 (async () => {
-  const {badFavs, ids, styles, sync} = __.MV3 ? prefs.clientData : await prefs.clientData;
+  const {badFavs, ids, styles, sync} = prefs.clientData;
   const rerenderNewUI = () => newUI.render();
   setupLivePrefs();
   newUI.render(true);
