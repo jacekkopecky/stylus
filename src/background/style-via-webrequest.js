@@ -319,11 +319,3 @@ function flushState() {
     stateDB.put(ruleIds, kRuleIds);
   }
 }
-
-/** @param {chrome.webRequest.WebRequestBodyDetails} req */
-function openNamedStyle(req) {
-  if (!req.url.includes('?')) { // skipping our usercss installer
-    chrome.tabs.update(req.tabId, {url: 'edit.html?id=' + req.url.split('#')[1]});
-    return {cancel: true};
-  }
-}

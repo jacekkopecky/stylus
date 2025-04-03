@@ -79,15 +79,6 @@ function onWindowResize() {
   prevHeight = h;
 }
 
-function toggleSideBorders(_key, state) {
-  const style = $root.style;
-  if (state) {
-    style.cssText += 'left right'.replace(/\S+/g, 'border-$&: 2px solid white !important;');
-  } else if (style.borderLeft) {
-    style.borderLeft = style.borderRight = '';
-  }
-}
-
 async function initPopup(frames, ping0, tab, urlSupported) {
   const kPopupWidth = 'popupWidth';
   prefs.subscribe([kPopupWidth, 'popupWidthMax'], (key, val) => {

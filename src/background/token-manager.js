@@ -1,10 +1,8 @@
 import {kAppUrlencoded, kContentType} from '@/js/consts';
 import {DNR_ID_IDENTITY, updateSessionRules} from '@/js/dnr';
 import {chromeLocal} from '@/js/storage-util';
-import {FIREFOX} from '@/js/ua';
 import * as URLS from '@/js/urls';
 import {getHost} from '@/js/util';
-import {browserWindows} from '@/js/util-webext';
 
 const AUTH = {
   dropbox: {
@@ -60,8 +58,6 @@ const AUTH = {
 };
 const NETWORK_LATENCY = 30; // seconds
 const DEFAULT_REDIRECT_URI = 'https://clngdbkpkpeebahjckkjfobafhncgmne.chromiumapp.org/';
-
-let alwaysUseTab = !browserWindows || (FIREFOX ? false : null);
 
 class TokenError extends Error {
   constructor(provider, message) {

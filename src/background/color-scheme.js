@@ -22,7 +22,7 @@ const map = {
 };
 export const SCHEMES = [kDark, kLight];
 export const isSystem = () => prefState === kSystem;
-export const refreshSystemDark = () => 
+export const refreshSystemDark = () =>
   prefState === kSystem && offscreen.isDark().then(setSystemDark);
 /** @type {(val: !boolean) => void} */
 export const setSystemDark = update.bind(null, kSystem);
