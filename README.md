@@ -39,7 +39,7 @@ The licenses of [external libraries](./vendor) used in this project or [modified
 
 ## todo
 
-- [ ] remove other manifests
+- [.] remove other manifests
 - [ ] remove greasy*, sleazy*, userstyles*, *.world
 - [x] remove transifex
 - [x] remove most locales
