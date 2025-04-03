@@ -339,7 +339,7 @@
     "description": "Label for the button to delete a style"
   },
   "description": {
-    "message": "Redesign the web with Stylus, a user styles manager. Stylus allows you to easily install themes and skins for many popular sites.",
+    "message": "Redesign the web with Stylus-without-network, a user styles manager cloned from Stylus. It allows you to create your own themes and skins for sites you use.",
     "description": "Extension description"
   },
   "disableAllStyles": {
@@ -827,7 +827,7 @@
     "description": "Checkbox to show only UserCSS styles"
   },
   "manageTitle": {
-    "message": "Stylus",
+    "message": "Stylus-without-network",
     "description": "Title for style manager"
   },
   "masterSwitch": {
@@ -1324,7 +1324,7 @@
     "message": "Add white borders on the sides"
   },
   "popupBordersTooltip": {
-    "message": "Useful for dark themes in new Chrome as it no longer paints the side borders"
+    "message": "Useful for dark themes as it no longer paints the side borders"
   },
   "popupHotkeysInfo": {
     "message": "<1>-<9>, <0>, also on numpad - toggles Nth style (0 is 10)\n<A>-<Z> toggles first style with a name that starts with the letter\n<Shift> opens editor instead of toggling\n<Numpad +> enables listed styles\n<Numpad –> disables listed styles\n<Numpad *> and <`> (backtick) - toggles initially enabled styles; doesn't apply to subsequently enabled styles while the popup is open so you can restore the initial selection after testing stuff: simply disable all, then toggle i.e. <Numpad –> <Numpad *>\nMore info on wiki",
@@ -1693,7 +1693,7 @@
     "message": "Some 'regexp()' rules that could not be compiled at all."
   },
   "styleRegexpPartialExplanation": {
-    "message": "This style uses partially matching regexps in violation of <a href='https://developer.mozilla.org/docs/Web/CSS/@document'>CSS4 @document specification</a> which requires a full URL match. The affected CSS sections were not applied to the page. This style was probably created in Stylish-for-Chrome which incorrectly checks 'regexp()' rules since the very first version (known bug)."
+    "message": "This style uses partially matching regexps in violation of <a href='https://developer.mozilla.org/docs/Web/CSS/@document'>CSS4 @document specification</a> which requires a full URL match. The affected CSS sections were not applied to the page. This style was probably created in Stylish which incorrectly checks 'regexp()' rules since the very first version (known bug)."
   },
   "styleRegexpProblemTooltip": {
     "message": "Number of sections not applied due to incorrect usage of 'regexp()'",
@@ -1761,7 +1761,7 @@
     "description": "Note in the toolbar pop-up when on a URL Stylus can't affect"
   },
   "stylusUnavailableForURLdetails": {
-    "message": "As a security precaution, the browser prohibits extensions from affecting its built-in pages (like chrome://version, the standard new tab page as of Chrome 61, about:addons, and so on) as well as other extensions' pages. Each browser also restricts access to its own extensions gallery (like Chrome Web Store or AMO).",
+    "message": "As a security precaution, the browser prohibits extensions from affecting its built-in pages as well as other extensions' pages. Each browser also restricts access to its own extensions gallery.",
     "description": "Sub-note in the toolbar pop-up when on a URL Stylus can't affect"
   },
   "styleUpdateUrlLabel": {
@@ -1840,7 +1840,7 @@
     "description": "Note in the popup when opened on a site with CSP that breaks injection in Firefox"
   },
   "unreachableFileHint": {
-    "message": "Stylus can access file:// URLs only if you enable the corresponding checkbox for Stylus extension on chrome://extensions page.",
+    "message": "Stylus can access file:// URLs only if you enable the corresponding checkbox for Stylus extension on the extension settings page.",
     "description": "Note in the toolbar popup for file:// URLs"
   },
   "unreachableMozSiteHint": {
