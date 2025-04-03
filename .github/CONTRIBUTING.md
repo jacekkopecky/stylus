@@ -20,22 +20,14 @@ When adding a **feature request**, please search through the existing issues to 
 
 If not, then provide details describing which page the feature will effect, e.g. popup, manager or editor. Then describe the request and explain how you think it would benefit the user experience.
 
-
-## Adding translations
-
-You can help us translate the extension on [Transifex](https://www.transifex.com/github-7/Stylus).
-Only the languages supported by the web store are allowed:
-https://developer.chrome.com/docs/webstore/i18n/#localeTable
-
-
 ## Pull requests
 
-* First open an issue to discuss your changes.
-* Then download, fork or clone this repository.
+- First open an issue to discuss your changes.
+- Then download, fork or clone this repository.
 <!-- * Use [node.js](https://nodejs.org/) to run `npm install`. -->
-* Use the provided `.editorconfig` file with your code editor. Don't know what that is? Then check out https://editorconfig.org/.
-* Make any changes within a branch of this repository (not the `master` branch).
-* Submit a pull request and include a reference to the initial issue with the discussion.
+- Use the provided `.editorconfig` file with your code editor. Don't know what that is? Then check out https://editorconfig.org/.
+- Make any changes within a branch of this repository (not the `master` branch).
+- Submit a pull request and include a reference to the initial issue with the discussion.
 
 ## Build scripts
 

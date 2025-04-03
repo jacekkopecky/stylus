@@ -78,8 +78,6 @@ In Firefox, it'll temporarily replace the existing Stylus extension. To restore 
 
 The source is hosted on [GitHub](https://github.com/openstyles/stylus) and pull requests are welcome.
 
-You can help us translate the extension on [Transifex](https://www.transifex.com/github-7/Stylus).
-
 See our [contributing](./.github/CONTRIBUTING.md) page for more details.
 
 ## License

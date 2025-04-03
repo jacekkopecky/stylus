@@ -60,8 +60,6 @@
     "lint": "eslint . --cache",
     "test": "pnpm lint && pnpm test-csslint",
     "test-csslint": "node tools/test-css.js",
-    "update-locales": "tx pull --all --minimum-perc=1 && node tools/fix-transifex.js commit",
-    "update-transifex": "tx push -s",
     "build-icons": "node tools/build-icons.mjs",
     "build-mv2": "webpack-cli --node-env any-mv2",
     "build-chrome-mv3": "webpack-cli --node-env chrome-mv3",
