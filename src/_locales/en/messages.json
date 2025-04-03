@@ -688,10 +688,6 @@
     "message": "Wiki",
     "description": "Wiki link text in style manager e.g. https://github.com/openstyles/stylus/wiki"
   },
-  "linkTranslate": {
-    "message": "Translate",
-    "description": "Transifex link text in style manager"
-  },
   "linterCSSLintIncompatible": {
     "message": "CSSLint doesn't support $preprocessorname$ preprocessor",
     "placeholders": {
