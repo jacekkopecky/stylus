@@ -8,11 +8,9 @@
 
 ## Build
 
-| type                  | command                 |
-| --------------------- | ----------------------- |
-| MV2 for any browser   | `pnpm build-mv2`        |
-| MV2 Firefox optimized | `pnpm build-firefox`    |
-| MV3 Chrome/Chromiums  | `pnpm build-chrome-mv3` |
+| type                 | command                 |
+| -------------------- | ----------------------- |
+| MV3 Chrome/Chromiums | `pnpm build-chrome-mv3` |
 
 ⚠ `dist` folder is not cleared.
 
@@ -20,7 +18,6 @@
 
 | type | command          |
 | ---- | ---------------- |
-| MV2  | `pnpm watch-mv2` |
 | MV3  | `pnpm watch-mv3` |
 
 ⚠ `dist` folder is not cleared.
@@ -29,13 +26,9 @@
 
 The files are created in the project root directory.
 
-| type            | command                    |
-| --------------- | -------------------------- |
-| All             | `pnpm zip`                 |
-| MV2 Firefox     | `pnpm zip-firefox`         |
-| MV2 Chrome      | `pnpm zip-chrome-mv2`      |
-| MV3 Chrome      | `pnpm zip-chrome-mv3`      |
-| MV3 Chrome beta | `pnpm zip-chrome-mv3-beta` |
+| type       | command               |
+| ---------- | --------------------- |
+| MV3 Chrome | `pnpm zip-chrome-mv3` |
 
 ## Tag a release/Bump the version
 
