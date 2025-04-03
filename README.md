@@ -41,7 +41,7 @@ The licenses of [external libraries](./vendor) used in this project or [modified
 
 - [x] remove other manifests, look for MV3 and remove branching
   - [x] check all modified files for unused imports,
-- [ ] remove greasy*, sleazy*, userstyles*, *.world
+- [.] remove greasy*, sleazy*, userstyles*, *.world
 - [x] remove transifex
 - [x] remove most locales
 - [ ] see if we could remove required permissions

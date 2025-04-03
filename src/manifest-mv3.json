@@ -13,32 +13,20 @@
     "tabs",
     "unlimitedStorage",
     "webNavigation",
-    "webRequest",
-    "webRequestBlocking"
+    "webRequest"
   ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "sw.js"
   },
   "commands": {
     "_execute_action": {}
   },
-  "content_scripts": [
+  "web_accessible_resources": [
     {
-      "matches": ["https://greasyfork.org/*scripts/*", "https://sleazyfork.org/*scripts/*"],
-      "js": ["js/install-hook-greasyfork.js"],
-      "run_at": "document_start"
-    }, {
-      "matches": ["https://userstyles.world/*"],
-      "js": ["js/install-hook-userstylesworld.js"],
-      "run_at": "document_start"
+      "resources": ["install-usercss.html"],
+      "matches": ["<all_urls>"],
+      "use_dynamic_url": false
     }
-  ],
-  "web_accessible_resources": [{
-    "resources": ["install-usercss.html"],
-    "matches": ["<all_urls>"],
-    "use_dynamic_url": false
-  }]
+  ]
 }

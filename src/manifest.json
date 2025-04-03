@@ -1,6 +1,6 @@
 {
-  "name": "Stylus",
-  "version": "2.3.14",
+  "name": "Stylus-without-network",
+  "version": "0.0.1",
   "minimum_chrome_version": "",
   "description": "__MSG_description__",
   "homepage_url": "https://add0n.com/stylus.html",
@@ -14,9 +14,9 @@
   "permissions": [],
   "background": {},
   "commands": {
-    "openManage": {"description": "__MSG_openManage__"},
-    "reload": {"description": "__MSG_reload__"},
-    "styleDisableAll": {"description": "__MSG_disableAllStyles__"}
+    "openManage": { "description": "__MSG_openManage__" },
+    "reload": { "description": "__MSG_reload__" },
+    "styleDisableAll": { "description": "__MSG_disableAllStyles__" }
   },
   "content_scripts": [
     {
@@ -26,11 +26,6 @@
       "match_about_blank": true,
       "match_origin_as_fallback": true,
       "js": ["js/apply.js"]
-    },
-    {
-      "matches": ["https://userstyles.org/*"],
-      "run_at": "document_start",
-      "js": ["js/install-hook-userstyles.js"]
     }
   ],
   "browser_action": {
@@ -43,6 +38,5 @@
     "default_title": "Stylus",
     "default_popup": "popup.html"
   },
-  "default_locale": "en",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2ypG+Z/beZtoYrxxwXYhMwQiAiwRVnSHqdpOSzJdjsXVWdvJjlgEuZcU8kte75w58P45LsRUrwvU6N9x12S6eW84KNEBC8rlZj0RGNoxuhSAcdxneYzjJ9tBkZKOidVedYHHsi3LeaXiLuTNTBR+2lf3uCNcP0ebaFML9uDLdYTGEW4eL3hnEKYPSmT1/xkh4bSGTToCg4YNuWWWoTA0beEOpBWYkPVMarLDQgPzMN5Byu5w3lOS2zL0PPJcmdyk3ez/ZsB4PZKU+h17fVA6+YTvUfxUqLde5i2RiuZhEb6Coo5/W90ZW1yCDC9osjWrxMGYeUMQWHPIgFtDhk4K6QIDAQAB"
+  "default_locale": "en"
 }
