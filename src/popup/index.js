@@ -87,23 +87,6 @@ async function initPopup(frames, ping0, tab, urlSupported) {
   }, true);
   setupLivePrefs();
 
-  const elFind = $id('find-styles-btn');
-  elFind.on('click', async () => {
-    elFind.disabled = true;
-    if (!styleFinder.on) await import('./search');
-    styleFinder.inline();
-  });
-  elFind.on('split-btn', async e => {
-    if (!styleFinder.on) await import('./search');
-    styleFinder.inSite(e);
-  });
-  window.on('keydown', e => {
-    if (getEventKeyName(e) === 'Ctrl-F') {
-      e.preventDefault();
-      elFind.click();
-    }
-  });
-
   Object.assign($id('popup-manage-button'), {
     onclick: Events.openManager,
     oncontextmenu: Events.openManager,
