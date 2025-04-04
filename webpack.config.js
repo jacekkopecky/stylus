@@ -452,7 +452,6 @@ module.exports = [
       new CopyPlugin({
         patterns: [
           {context: SRC, from: 'icon/**', to: DST},
-          {context: SRC + 'content', from: 'install*.js', to: DST + JS},
           {context: SRC, from: getManifestOvrName(MV3, true), to: MANIFEST,
             transformAll: makeManifest},
           {context: SRC, from: '_locales/**', to: DST},
