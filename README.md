@@ -44,7 +44,7 @@ The licenses of [external libraries](./vendor) used in this project or [modified
 - [x] remove greasy*, sleazy*, userstyles*, *.world
 - [.] remove usercss - I've already removed the compiler
 - [x] edit page says "edit stylenull" - why?
-- [ ] remove fetch and XMLHttpRequest except where only called locally
+- [x] remove fetch and XMLHttpRequest except where only called locally
 - [x] remove "drive", token-manager, sync
 - [.] remove find button, search.js etc?
 - [ ] fix "manage site styles" - the automatic search current doesn't work

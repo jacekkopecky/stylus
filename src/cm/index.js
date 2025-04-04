@@ -140,18 +140,6 @@ prefs.ready.then(() => {
   }
 
   Object.assign(CodeMirror.prototype, {
-    /**
-     * @param {'less' | 'stylus' | ?} [pp] - any value besides `less` or `stylus` sets `css` mode
-     * @param {boolean} [force]
-     */
-    setPreprocessor(pp, force) {
-      const name = pp === 'less' ? 'text/x-less' : pp === 'stylus' ? pp : 'css';
-      const m = this.doc.mode;
-      if (force || (m.helperType ? m.helperType !== pp : m.name !== name)) {
-        this.setOption('mode', name);
-        this.doc.mode.lineComment = ''; // stylelint chokes on line comments a lot
-      }
-    },
     /** Superfast GC-friendly check that runs until the first non-space line */
     isBlank() {
       let filled;
