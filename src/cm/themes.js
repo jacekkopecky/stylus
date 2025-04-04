@@ -33,6 +33,7 @@ export async function loadCmTheme(name = prefs.__values[THEME_KEY]) {
       await new Promise(resolve => (EL.onload = resolve));
       css = '';
     } else {
+      // this XMLHttpRequest is only used to load themes for the CSS editor
       const xhr = new XMLHttpRequest();
       xhr.open('GET', css, /*async=*/false);
       xhr.send();

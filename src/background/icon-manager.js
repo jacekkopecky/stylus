@@ -147,6 +147,7 @@ function getStyleCount(tabId) {
 // Caches imageData for icon paths
 async function loadImage(url) {
   const {OffscreenCanvas} = self || {};
+  // the following fetch() is OK because it's only used to get bundled icons
   const img = await createImageBitmap(await (await fetch(url)).blob());
   const {width: w, height: h} = img;
   const canvas = new OffscreenCanvas(w, h);
