@@ -16,20 +16,13 @@ import {bgBusy, bgInit, bgPreInit, dataHub} from './common';
 import reinjectContentScripts from './content-scripts';
 import initContextMenus from './context-menus';
 import {draftsDB, mirrorStorage, prefsDB, stateDB} from './db';
-import download from './download';
 import {refreshIconsWhenReady, updateIconBadge} from './icon-manager';
 import {setPrefs} from './prefs-api';
 import * as styleMan from './style-manager';
 import * as styleCache from './style-manager/cache';
 import {dataMap} from './style-manager/util';
 import initStyleViaApi from './style-via-api';
-import './style-via-webrequest';
-import * as syncMan from './sync-manager';
 import {openEditor, openManager, openURL} from './tab-util';
-import * as updateMan from './update-manager';
-import * as usercssMan from './usercss-manager';
-import * as usoApi from './uso-api';
-import * as uswApi from './usw-api';
 
 Object.assign(API, /** @namespace API */ {
 
@@ -40,7 +33,6 @@ Object.assign(API, /** @namespace API */ {
   //#endregion
   //#region API misc actions
 
-  download,
   openEditor,
   openManager,
   openURL,
@@ -53,11 +45,6 @@ Object.assign(API, /** @namespace API */ {
   //#region API namespaced actions
 
   styles: styleMan,
-  sync: syncMan,
-  updater: updateMan,
-  usercss: usercssMan,
-  uso: usoApi,
-  usw: uswApi,
 
   //#endregion
 
@@ -83,8 +70,7 @@ chrome.runtime.onInstalled.addListener(({reason, previousVersion}) => {
   (bgPreInit.length ? bgPreInit : bgInit).push(
     stateDB.clear(),
     DNR.getDynamicRules().then(rules => updateDynamicRules(undefined, getRuleIds(rules)))
-      .then(() => prefs.ready)
-      .then(() => usercssMan.toggleUrlInstaller()),
+      .then(() => prefs.ready),
     DNR.getSessionRules().then(rules => updateSessionRules(undefined, getRuleIds(rules))),
   );
   refreshIconsWhenReady();

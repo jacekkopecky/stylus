@@ -8,9 +8,6 @@ import {prefsDB, stateDB} from './db';
 import makePopupData from './popup-data';
 import {nondefaults} from './prefs-api';
 import * as styleMan from './style-manager';
-import {webRequestBlocking} from './style-via-webrequest';
-import * as syncMan from './sync-manager';
-import * as usercssTemplate from './usercss-template';
 
 const kEditorScrollInfo = 'editorScrollInfo';
 /** @type {ResponseInit} */
@@ -30,7 +27,6 @@ const PROVIDERS = {
       style,
       isUC,
       si: style && stateDB.get(siKey),
-      template: !style && isUC && (usercssTemplate.value || usercssTemplate.load()),
     };
   },
   manage(url) {
@@ -46,18 +42,9 @@ const PROVIDERS = {
           mode: sp.get('searchMode') || prefs.__values['manage.searchMode'],
         }),
       styles: styleMan.getCore({sections: true, size: true}),
-      sync: syncMan.getStatus(true),
     };
   },
-  options: () => {
-    const status = syncMan.getStatus();
-    const {drive} = status;
-    return /** @namespace StylusClientData */ {
-      sync: status,
-      syncOpts: drive ? syncMan.getDriveOptions(drive) : {},
-      wrb: webRequestBlocking,
-    };
-  },
+  options: () => ({}),
   popup: () => ({
     [kPopup]: dataHub.pop(kPopup) || makePopupData(),
   }),

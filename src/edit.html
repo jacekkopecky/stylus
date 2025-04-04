@@ -22,11 +22,6 @@
   <template data-id="body"> <!-- https://crbug.com/1288447 -->
     <div id="header" class="dvh100">
       <h1 id="heading" i18n="data-edit:editStyleHeading, data-add:addStyleTitle">
-        <a class="usercss-only icon hide-if-sticky"
-           href="https://github.com/openstyles/stylus/wiki/Writing-UserCSS"
-           i18n="title:externalUsercssDocument" target="_blank">
-          <i class=i-info></i>
-        </a>
       </h1>
       <section id="basic-info">
         <div id="basic-info-name" class="hide-if-sticky">
@@ -95,20 +90,6 @@
                  data-pref="editor.options.style.expanded">
           <summary><h2 i18n="styleSettings"></h2></summary>
         </details>
-        <details id="publish" data-pref="editor.publish.expanded"
-                 class="ignore-pref-if-compact hide-if-new">
-          <summary><h2 i18n="publish"></h2></summary>
-          <main>
-            <a id="usw-url" href="https://userstyles.world" target="_blank">&nbsp;</a>
-            <p>
-              <button id="usw-publish-style"
-                      i18n="data-publish:publishStyle, data-push:publishPush"></button>
-              <button id="usw-disconnect" i18n="optionsSyncDisconnect"></button>
-              <span id="usw-progress"></span>
-            </p>
-            <section id="usw-data" class="aligned"></section>
-          </main>
-        </details>
         <details id="sections-list" data-pref="editor.toc.expanded" class="ignore-pref-if-compact">
           <summary><h2 id="toc-title" i18n="sections"></h2></summary>
           <ol id="toc"></ol>
@@ -125,11 +106,6 @@
         </details>
       </div>
       <div id="header-resizer" i18n="title:headerResizerHint"></div>
-      <div id="footer" class="hidden">
-        <a href="https://github.com/openstyles/stylus/wiki/Usercss"
-           i18n="externalUsercssDocument"
-           target="_blank"></a>
-      </div>
     </div>
     <section id="sections"></section>
   </template>

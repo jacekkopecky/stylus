@@ -5,7 +5,6 @@ import {debounce, t} from '@/js/util';
 import {ignoreChromeError, MF_ICON_EXT, MF_ICON_PATH} from '@/js/util-webext';
 import * as colorScheme from './color-scheme';
 import {bgBusy, bgInit, onSchemeChange, onUnload} from './common';
-import {removePreloadedStyles} from './style-via-webrequest';
 import tabCache, * as tabMan from './tab-manager';
 
 const browserAction = chrome.action || {};
@@ -75,7 +74,6 @@ export function updateIconBadge(styleIds, lazyBadge, iid) {
   debounce(refreshStaleBadges, frameId && lazyBadge ? 250 : 0);
   staleBadges.add(tabId);
   if (!frameId) refreshIcon(tabId, true);
-  removePreloadedStyles(null, tabId + ':' + frameId);
 }
 
   /** Calling with no params clears the override */

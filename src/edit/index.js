@@ -13,7 +13,6 @@ import SectionsEditor from './sections-editor';
 import SourceEditor from './source-editor';
 import './colorpicker-helper';
 import './live-preview';
-import USWIntegration from './usw-integration';
 import './windowed-mode';
 import './edit.css';
 /** Loading here to avoid a separate tiny file in dist */
@@ -25,7 +24,6 @@ tBody();
   if (loading) await loading;
   if (editor.scrollInfo.sticky) toggleSticky(true);
   EditorHeader();
-  USWIntegration();
   // TODO: load respective js on demand?
   (editor.isUsercss ? SourceEditor : SectionsEditor)();
   editor.dirty.onChange(editor.updateDirty);
