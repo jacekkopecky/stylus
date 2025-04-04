@@ -14,7 +14,7 @@ import './init';
 import {onBeforeSave, onSaved} from './fixer';
 import {urlMatchSection, urlMatchStyle} from './matcher';
 import {
-  broadcastStyleUpdated, calcRemoteId, dataMap, getById, getByUuid,
+  broadcastStyleUpdated, dataMap, getById, getByUuid,
   mergeWithMapped, order, orderWrap, setOrderImpl,
 } from './util';
 
@@ -155,13 +155,8 @@ export function getCore({id, code, sections, size, vars} = {}) {
 
 /** @returns {string | {[remoteId:string]: styleId}}>} */
 export function getRemoteInfo(id) {
-  if (id) return calcRemoteId(getById(id));
-  const res = {};
-  for (const {style} of dataMap.values()) {
-    const [rid, vars] = calcRemoteId(style);
-    if (rid) res[rid] = [style.id, vars];
-  }
-  return res;
+  console.log('without-network: getRemoteInfo called, it is only a stub now', id);
+  return {};
 }
 
 /** @returns {Injection.Response} */

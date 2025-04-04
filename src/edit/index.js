@@ -10,7 +10,6 @@ import loading from './load-style';
 import './on-msg-extension';
 import './settings';
 import SectionsEditor from './sections-editor';
-import SourceEditor from './source-editor';
 import './colorpicker-helper';
 import './live-preview';
 import './windowed-mode';
@@ -24,8 +23,7 @@ tBody();
   if (loading) await loading;
   if (editor.scrollInfo.sticky) toggleSticky(true);
   EditorHeader();
-  // TODO: load respective js on demand?
-  (editor.isUsercss ? SourceEditor : SectionsEditor)();
+  SectionsEditor();
   editor.dirty.onChange(editor.updateDirty);
   prefs.subscribe('editor.linter', () => linterMan.run());
   CompactHeader();

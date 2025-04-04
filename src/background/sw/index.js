@@ -5,9 +5,7 @@ import {_execute} from '@/js/msg';
 import {initRemotePort} from '@/js/port';
 import {ownRoot} from '@/js/urls';
 import {clientDataJobs} from '../common';
-import {cloudDrive} from '../db-to-cloud-broker';
 import setClientData from '../set-client-data';
-import offscreen from '../offscreen';
 import '..';
 
 if (__.DEBUG) {
@@ -51,13 +49,6 @@ global.onfetch = evt => {
 
 // API
 global.onmessage = initRemotePort.bind(_execute);
-
-cloudDrive.webdav = async cfg => {
-  const res = await offscreen.webdavInit(cfg);
-  const webdav = offscreen.webdav;
-  for (const k in res) res[k] ??= webdav.bind(null, k);
-  return res;
-};
 
 /**
  * This ensures that SW starts even before our page makes a clientData request inside.
