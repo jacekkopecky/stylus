@@ -22,7 +22,6 @@ tBody();
   router.update();
   if (newUI.hasFavs()) readBadFavs(badFavs);
   showStyles(styles, ids);
-  console.log('without-network: not initializing sync button');
   import('./lazy-init');
 })();
 
