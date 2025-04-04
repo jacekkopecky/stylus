@@ -126,6 +126,7 @@ function getStylesViaXhr() {
     if (!blobId) return; // avoiding an exception so we don't spoil debugging in devtools
     const url = 'blob:' + runtime.getURL(blobId);
     document.cookie = `${ownId}=1; max-age=0; SameSite=Lax`; // remove our cookie
+    // this XMLHttpRequest is only used with blob: URLs so it only makes local requests
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, false); // synchronous
     xhr.send();
