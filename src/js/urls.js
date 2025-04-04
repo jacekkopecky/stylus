@@ -1,7 +1,6 @@
 /** Ends with "/" */
 export const ownRoot = /*@__PURE__*/ chrome.runtime.getURL('');
 export const actionPopupUrl = ownRoot + 'popup.html';
-export const installUsercss = 'install-usercss.html';
 export const workerPath = '/js/worker.js';
 export const swPath = `/${__.PAGE_BG}.js`;
 export const favicon = host => `https://icons.duckduckgo.com/ip3/${host}.ico`;

@@ -30,7 +30,6 @@ const PAGE_BG = 'background/sw';
 const OFFSCREEN = 'offscreen';
 const PAGES = [
   'edit',
-  'install-usercss',
   'manage',
   'options',
   'popup',

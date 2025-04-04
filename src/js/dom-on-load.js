@@ -8,8 +8,7 @@ import {tHTML} from './localization';
 import {onMessage} from './msg';
 import * as prefs from './prefs';
 import {CHROME, FIREFOX} from './ua';
-import {installUsercss} from './urls';
-import {clamp, debounce, t, tryURL} from './util';
+import {clamp, debounce, t} from './util';
 
 const SPLIT_BTN_MENU = '.split-btn-menu';
 const tooltips = new WeakMap();
@@ -41,36 +40,6 @@ if (!CHROME || CHROME < 93) {
 const elOff = $id('disableAll-label'); // won't hide if already shown
 if (elOff) prefs.subscribe('disableAll', () => (elOff.dataset.persist = ''));
 if ($id('header')) HeaderResizer();
-
-const getFSH = DataTransferItem.prototype.getAsFileSystemHandle;
-if (getFSH) {
-  addEventListener('dragover', e => {
-    if (e.dataTransfer.types.includes('Files')) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  }, true);
-  addEventListener('drop', async e => {
-    const dt = e.dataTransfer;
-    const file = dt.files[0];
-    if (file.type.includes('json')) {
-      return;
-    }
-    if (!/\.(css|styl|less)$/i.test(file.name)) {
-      return;
-    }
-    e.preventDefault();
-    e.stopPropagation();
-    const path = installUsercss;
-    // Some apps provide the file's URL in a text dataTransfer item.
-    const url = tryURL(dt.getData('text')).href;
-    const handle = await getFSH.call([].find.call(dt.items, v => v.kind === 'file'));
-    const wnd = window.open(path);
-    // Transfer the handle to the new window (required in some versions of Chrome)
-    const {structuredClone} = wnd; // Chrome 98+
-    (wnd.fsh = structuredClone ? structuredClone(handle) : handle)._url = url;
-  }, true);
-}
 
 function changeFocusedInputOnWheel(event) {
   const el = document.activeElement;
