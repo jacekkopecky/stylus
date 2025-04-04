@@ -9,7 +9,6 @@ import * as prefs from '@/js/prefs';
 import {FIREFOX, MAC, OPERA} from '@/js/ua';
 import {clamp, t} from '@/js/util';
 import {ignoreChromeError} from '@/js/util-webext';
-import './options-sync';
 import '@/css/onoffswitch.css';
 import './options.css';
 import shortcutsFF from './shortcuts-ff.html';

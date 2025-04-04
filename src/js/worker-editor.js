@@ -72,17 +72,8 @@ Object.assign(COMMANDS, {
     return ruleRetriever[linter]();
   },
 
-  metalint(code) {
-    importScriptsOnce('meta-parser.js'); /* global metaParser */
-    const result = metaParser.lint(code);
-    // extract needed info
-    result.errors = result.errors.map(err => ({
-      code: err.code,
-      args: err.args,
-      message: err.message,
-      index: err.index,
-    }));
-    return result;
+  metalint() {
+    console.log('metalint called, it is only a stub now');
   },
 
   async stylelint(opts) {

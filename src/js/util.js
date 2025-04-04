@@ -198,18 +198,6 @@ export async function fetchText(url, opts) {
   return (await fetch(url, opts)).text();
 }
 
-/** @this {Object} DriveOptions */
-export function fetchWebDAV(url, init = {}) {
-  return fetch(url, {
-    ...init,
-    credentials: 'omit', // circumventing nextcloud CSRF token error
-    headers: {
-      ...init.headers,
-      Authorization: `Basic ${btoa(`${this.username || ''}:${this.password || ''}`)}`,
-    },
-  });
-}
-
 /** A simple polyfill in case DOM storage is disabled in the browser */
 export let sessionStore = /*@__PURE__*/ new Proxy({}, {
   get(target, name) {

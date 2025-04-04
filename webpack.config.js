@@ -195,8 +195,6 @@ const getBaseConfig = () => ({
         loader: './tools/wp-cjs-to-esm-loader.js',
         test: new RegExp(`/node_modules/(${escapeForRe([
           '@eight04/',
-          'db-to-cloud',
-          'webext-launch-web-auth-flow',
         ].join('\n')).replaceAll('\n', '|')})`.replaceAll('/', SEP_ESC)),
       }, {
         loader: './tools/wp-lzstring-loader.js',
@@ -517,16 +515,12 @@ module.exports = [
     output: {path: DST + JS},
   })),
 
-  makeLibrary('db-to-cloud/lib/drive/webdav', 'webdav'),
-
   makeContentScript('apply.js'),
   makeLibrary('@/js/worker.js', undefined, {
     plugins: [new RawEnvPlugin({ENTRY: 'worker'})],
   }),
   makeLibrary('@/js/color/color-converter.js', '*:colorConverter'),
-  makeLibrary('@/js/meta-parser.js', 'metaParser'),
   makeLibrary('@/js/moz-parser.js', 'extractSections'),
-  makeLibrary('@/js/usercss-compiler.js', 'compileUsercss'),
 ].filter(Boolean);
 
 module.exports.parallelism = 2;

@@ -24,7 +24,6 @@ export async function showLintConfig() {
   if (!linter) {
     return;
   }
-  await import('@/cm/jsonlint-bundle');
   const config = await getLZValue(LZ_KEY[linter]);
   const defaults = DEFAULTS[linter];
   const title = t('linterConfigPopupTitle', isStylelint ? 'Stylelint' : 'CSSLint');
