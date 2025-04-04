@@ -1,13 +1,11 @@
-import {kStyleIdPrefix, UCD} from '@/js/consts';
+import {kStyleIdPrefix} from '@/js/consts';
 import {$create, $toggleDataset} from '@/js/dom';
-import {setupLivePrefs, showSpinner} from '@/js/dom-util';
+import {setupLivePrefs} from '@/js/dom-util';
 import {breakWord, formatDate, htmlToTemplateCache, templateCache} from '@/js/localization';
-import {onConnect} from '@/js/msg';
 import {API} from '@/js/msg-api';
 import * as prefs from '@/js/prefs';
-import * as URLS from '@/js/urls';
 import {
-  clipString, debounce, sleep, stringAsRegExp, stringAsRegExpStr, t, tryRegExp, tryURL,
+  clipString, debounce, stringAsRegExp, stringAsRegExpStr, t, tryRegExp, tryURL,
 } from '@/js/util';
 import {styleFinder, tabUrl, tabUrlSupported} from '.';
 import * as Events from './events';
@@ -20,17 +18,8 @@ document.body.append(templateCache.searchUI);
 const RESULT_TPL = templateCache.searchResult;
 const RESULT_ID_PREFIX = RESULT_TPL.className + '-';
 const RESULT_SEL = '.' + RESULT_TPL.className;
-const INDEX_URL = URLS.usoaRaw[0] + 'search-index.json';
-const USW_INDEX_URL = URLS.usw + 'api/index/uso-format';
-const USW_ICON = $create('img', {
-  src: `${URLS.usw}favicon.ico`,
-  title: URLS.usw,
-});
 const STYLUS_CATEGORY = 'chrome-extension';
 const PAGE_LENGTH = 100;
-// update USO style install counter if the style isn't uninstalled immediately
-const PINGBACK_DELAY = 5e3;
-const USO_AUTO_PIC_SUFFIX = '-after.png';
 const GLOBAL = 'global';
 const dom = {};
 const $searchGlobals = $id('popup.search.globals');
@@ -112,27 +101,7 @@ styleFinder.inline = () => {
   ready = start();
 };
 styleFinder.inSite = event => {
-  // use a less specific category if the inline search wasn't used yet
-  if (!category) calcCategory({retry: 1});
-  const add = (prefix, str) => str ? prefix + str : '';
-  const where = event.detail;
-  const q = encodeURIComponent($id('search-query').value.trim());
-  const catQ = category + add('+', q);
-  const href =
-    where === 'uso' &&
-      `${URLS.uso}styles/browse${q ? `?search_terms=${catQ}`
-        : category === GLOBAL ? '' : `/${category}`}` ||
-    where === 'usoa' &&
-      `${URLS.usoa}browse/styles?search=%23${catQ}` ||
-    where === 'usw' &&
-      `${URLS.usw}search?q=${catQ}` ||
-    where === 'gf' &&
-      'https://greasyfork.org/' + ($root.lang.split('-')[0] || 'en') +
-      `/scripts${tabUrlSupported
-        ? tryURL(tabUrl).hostname.replace(/^(www\.)?/, '/by-site/')
-        : ''
-      }?language=css${add('&q=', q)}`;
-  Events.openURLandHide.call({href}, event);
+  console.log('inSite search, it is only a stub now', event);
 };
 $id('search-query').oninput = function () {
   query = [];
@@ -188,13 +157,7 @@ function onStyleDeleted({style: {id}}) {
 }
 
 async function onStyleInstalled({style}) {
-  const ri = await API.styles.getRemoteInfo(style.id);
-  const r = ri && results.find(_ => ri[0] === _.i);
-  if (r) {
-    r._styleId = style.id;
-    r._styleVars = ri[1];
-    renderActionButtons(ri[0]);
-  }
+  console.log('ignoring onStyleInstalled, it is only a stub now', style);
 }
 
 function next() {
@@ -362,7 +325,6 @@ function createSearchResultNode(result) {
     t: totalInstalls,
     ai: authorId,
     an: author,
-    sa: shotArchived,
     sn: shot,
     f: fmt,
   } = entry._result = result;
@@ -371,21 +333,20 @@ function createSearchResultNode(result) {
   // title
   Object.assign(entry.$('.search-result-title'), {
     onclick: Events.openURLandHide,
-    href: `${fmt ? URLS.usoa : URLS.usw}style/${id}`,
+    // href: `${fmt ? URLS.usoa : URLS.usw}style/${id}`,
+    href: `jacek/${id}`,
   });
-  if (!fmt) entry.$('.search-result-title').prepend(USW_ICON.cloneNode(true));
+  console.log('without-network: not adding usw icon');
   entry.$('.search-result-title span').textContent =
     breakWord(clipString(name, 300));
   // screenshot
   const elShot = entry.$('.search-result-screenshot');
   let shotSrc;
+  console.log('createSearchResultNode', fmt, imgType);
   if (!fmt) {
     shotSrc = /^https?:/i.test(shot) && shot.replace(/\.\w+$/, imgType);
   } else {
-    elShot._src = URLS.uso + `auto_style_screenshots/${id}${USO_AUTO_PIC_SUFFIX}`;
-    shotSrc = shot && !shot.endsWith(USO_AUTO_PIC_SUFFIX)
-      ? `${shotArchived ? URLS.usoaRaw[0] : URLS.uso + 'style_'}screenshots/${shot}`
-      : elShot._src;
+    console.log('without-network: dropped something here');
   }
   if (shotSrc) {
     elShot._entry = entry;
@@ -398,8 +359,7 @@ function createSearchResultNode(result) {
   Object.assign(entry.$('[data-type="author"] a'), {
     textContent: author,
     title: author,
-    href: !fmt ? `${URLS.usw}user/${encodeURIComponent(author)}` :
-      `${URLS.usoa}browse/styles?search=%40${authorId}`,
+    href: `without-network-dropped${authorId}`,
     onclick: Events.openURLandHide,
   });
   // rating
@@ -480,48 +440,13 @@ function renderActionButtons(entry) {
   $toggleDataset(entry, 'customizable', result._styleVars);
 }
 
-function renderFullInfo(entry, style) {
-  let {description, vars} = style[UCD];
-  // description
-  description = (description || '')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/([^.][.。?!]|[\s,].{50,70})\s+/g, '$1\n')
-    .replace(/([\r\n]\s*){3,}/g, '\n\n');
-  entry.$('.search-result-description').textContent = description;
-  vars = !!vars;
-  entry._result._styleVars = vars;
-  $toggleDataset(entry, 'customizable', vars);
-}
-
 function configure() {
   const styleEntry = $id(kStyleIdPrefix + $resultEntry(this).result._styleId);
   Events.configure.call(this, {}, styleEntry);
 }
 
 async function install() {
-  const {entry, result} = $resultEntry(this);
-  const {f: fmt} = result;
-  const id = rid2id(result.i);
-  const installButton = entry.$('.search-result-install');
-
-  const spinner = showSpinner(entry);
-  installButton.disabled = true;
-  entry.style.setProperty('pointer-events', 'none', 'important');
-  delete entry.dataset.error;
-  if (fmt) API.uso.pingback(id, PINGBACK_DELAY);
-
-  const updateUrl = URLS.makeUpdateUrl(fmt ? 'usoa' : 'usw', id);
-  try {
-    const sourceCode = await (await fetch(updateUrl)).text();
-    const style = await API.usercss.install({sourceCode, updateUrl});
-    renderFullInfo(entry, style);
-  } catch (e) {
-    entry.dataset.error = `${t('genericError')}: ${e && e.message || e}`;
-    entry.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-  }
-  spinner.remove();
-  installButton.disabled = false;
-  entry.style.pointerEvents = '';
+  console.log('search install called, it is only a stub now');
 }
 
 function uninstall() {
@@ -561,51 +486,8 @@ function calcCategory({retry} = {}) {
 }
 
 async function fetchIndex() {
-  const elNote = $id('pct').firstChild;
-  const jobs = [
-    [INDEX_URL, 'uso', json => json.filter(v => v.f === 'uso')],
-    [USW_INDEX_URL, 'usw', json => json.data],
-  ].map(fetchIndexJob);
-  indexing = Promise.all(jobs).then(() => {
-    indexing = null;
-    elNote.style.opacity = 0;
-    start();
-  });
-  // Polyfilling a leaky Promise.race, https://crbug.com/42203149
-  await new Promise((resolve, reject) => {
-    for (const job of jobs) job.then(resolve, reject);
-  });
+  console.log('fetchIndex called, it is only a stub now');
   return index;
-}
-
-async function fetchIndexJob([url, prefix, transform]) {
-  let el = $create('div', {title: url});
-  $id('pct').append(el);
-  onConnect[prefix] = port => {
-    port.onMessage.addListener(([done, total]) => {
-      if (!el) return;
-      el.textContent = total
-        ? (done / total * 100 | 0) + '%'
-        : formatNumber(done) + '...';
-    });
-  };
-  for (let triesLeft = 3; triesLeft--;) {
-    try {
-      const res = transform(JSON.parse(await API.download(url, {port: prefix})));
-      for (const v of res) v.i = `${prefix}-${v.i}`;
-      if (!index) {
-        index = res;
-      } else {
-        index = index.concat(res);
-      }
-      break;
-    } catch (e) {
-      // CDN weirdly fails the first time, so we'll retry
-      if (!triesLeft) error(e.message);
-      else await sleep(250);
-    }
-  }
-  el = el.style.opacity = 0;
 }
 
 async function search({retry} = {}) {

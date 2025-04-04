@@ -1,8 +1,4 @@
-import {UCD} from '@/js/consts';
-import * as URLS from '@/js/urls';
 import {isEmptyObj} from '@/js/util';
-import * as syncMan from '../sync-manager';
-import * as usercssMan from '../usercss-manager';
 import {buildCacheForStyle} from './cache-builder';
 import {broadcastStyleUpdated, dataMap, storeInMap} from './util';
 
@@ -14,14 +10,12 @@ const MISSING_PROPS = {
   _rev: Date.now,
 };
 
-const hasVarsAndImport = ({code}) => code.startsWith(':root {\n  --') && /@import\s/i.test(code);
-
 /**
  * @param {StyleObj} style
  * @param {boolean} [revive]
  * @return {?StyleObj|Promise<StyleObj>}
  */
-export function fixKnownProblems(style, revive) {
+export function fixKnownProblems(style) {
   let res = 0;
   let v;
   for (const key in MISSING_PROPS) {
@@ -56,38 +50,6 @@ export function fixKnownProblems(style, revive) {
       res = 1;
       style[key] = fixedUrl;
     }
-  }
-  /* USO bug, duplicate "update" subdomain, see #523 */
-  if ((v = style.md5Url) && v.includes('update.update.userstyles')) {
-    res = style.md5Url = v.replace('update.update.userstyles', 'update.userstyles');
-  }
-  /* Outdated USO-archive links */
-  if (`${style.url}${style.installationUrl}`.includes('https://33kk.github.io/uso-archive/')) {
-    delete style.url;
-    delete style.installationUrl;
-  }
-  /* Default homepage URL for external styles installed from a known distro */
-  if (
-    (!style.url || !style.installationUrl) &&
-    (v = style.updateUrl) &&
-    (v = URLS.makeInstallUrl(v) ||
-        (v = /\d+/.exec(style.md5Url)) && `${URLS.uso}styles/${v[0]}`
-    )
-  ) {
-    if (!style.url) res = style.url = v;
-    if (!style.installationUrl) res = style.installationUrl = v;
-  }
-  if (revive && (
-    !Array.isArray(v = style.sections) && (v = 0, true) ||
-    /* @import must precede `vars` that we add at beginning */
-    style[UCD]?.vars && v.some(hasVarsAndImport)
-  )) {
-    if (!v && !style.sourceCode) {
-      style.customName = 'Damaged style #' + style.id;
-      style.sections = [{code: '/* No sections or sourceCode */'}];
-      return style;
-    }
-    return usercssMan.buildCode(style);
   }
   return res && style;
 }
@@ -124,9 +86,6 @@ export function onSaved(style, reason, id = style.id) {
     broadcastStyleUpdated(style, reason, !data);
   } else {
     buildCacheForStyle(style);
-  }
-  if (reason !== 'sync') {
-    syncMan.putDoc(style);
   }
   return style;
 }

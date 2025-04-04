@@ -6,11 +6,8 @@ import {broadcast} from '../broadcast';
 import * as colorScheme from '../color-scheme';
 import {uuidIndex} from '../common';
 import {db, draftsDB} from '../db';
-import * as syncMan from '../sync-manager';
 import tabCache from '../tab-manager';
 import {getUrlOrigin} from '../tab-util';
-import * as usercssMan from '../usercss-manager';
-import * as uswApi from '../usw-api';
 import cacheData, * as styleCache from './cache';
 import {buildCache} from './cache-builder';
 import './init';
@@ -233,9 +230,6 @@ export async function importMany(items) {
   for (const style of items) {
     try {
       onBeforeSave(style);
-      if (style.sourceCode && style[UCD]) {
-        await usercssMan.buildCode(style);
-      }
       res.push(styles.push(style) - 1);
     } catch (err) {
       res.push({err});
@@ -273,28 +267,15 @@ export async function install(style, reason = dataMap.has(style.id) ? 'update' :
 
 /** @param {StyleObj} style */
 export async function preview(style) {
-  let res = style.sourceCode || false;
-  if (res) {
-    res = await usercssMan.build({
-      styleId: style.id,
-      sourceCode: res,
-      assignVars: true,
-    });
-    delete res.style.enabled;
-    Object.assign(style, res.style);
-  }
   dataMap.get(style.id).preview = style;
   broadcastStyleUpdated(style, 'editPreview');
-  return res.log;
 }
 
 /** @returns {number} style id */
-export function remove(id, reason) {
+export function remove(id) {
   const {style, appliesTo} = dataMap.get(id);
-  const sync = reason !== 'sync';
   const uuid = style._id;
   db.delete(id);
-  if (sync) syncMan.remove(uuid, Date.now());
   for (const url of appliesTo) {
     const cache = cacheData.get(url);
     if (cache) {
@@ -310,10 +291,6 @@ export function remove(id, reason) {
     if (i >= 0) group.splice(i, 1);
   });
   setOrderImpl(orderWrap, {calc: false});
-  if (style._usw && style._usw.token) {
-    // Must be called after the style is deleted from dataMap
-    uswApi.revoke(id);
-  }
   draftsDB.delete(id).catch(() => {});
   broadcast({
     method: 'styleDeleted',
