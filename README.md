@@ -41,9 +41,19 @@ The licenses of [external libraries](./vendor) used in this project or [modified
 
 - [x] remove other manifests, look for MV3 and remove branching
   - [x] check all modified files for unused imports,
-- [.] remove greasy*, sleazy*, userstyles*, *.world
+- [x] remove greasy*, sleazy*, userstyles*, *.world
+- [ ] remove usercss - I've already removed the compiler
+- [x] edit page says "edit stylenull" - why?
+- [ ] remove fetch and XMLHttpRequest except where only called locally
+- [x] remove "drive", token-manager, sync
+- [ ] remove find button, search.js etc?
+- [ ] fix "manage site styles" - the automatic search current doesn't work
+  - manage.html doesn't show the styles when search is set?
+- [ ] review all extension pages for stuff to remove
+- [ ] in all console.log statements, add "Stylus-without-network: "
 - [x] remove transifex
 - [x] remove most locales
 - [ ] see if we could remove required permissions
 - [ ] maybe remove firefox stuff, builds other than chrome?
 - [ ] remove unused files?
+  - [x] remove SourceEditor? (seems only to be used for Usercss)

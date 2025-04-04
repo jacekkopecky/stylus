@@ -24,7 +24,7 @@ export default function CompactHeader() {
   const xo = new IntersectionObserver(onScrolled, {root: xoRoot});
   const elInfo = $('h1 a');
   scroller.appendChild(elHeader);
-  mqCompact(val => {
+  if (elInfo) mqCompact(val => {
     if (val) {
       xo.observe(elHeader);
       $id('basic-info-name').after(elInfo);
