@@ -72,10 +72,6 @@ Object.assign(COMMANDS, {
     return ruleRetriever[linter]();
   },
 
-  metalint() {
-    console.log('metalint called, it is only a stub now');
-  },
-
   async stylelint(opts) {
     importScriptsOnce('stylelint.js'); /* global stylelint */
     // Stylus-lang allows a trailing ";" but sugarss doesn't, so we monkeypatch it

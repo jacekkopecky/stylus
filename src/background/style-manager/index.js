@@ -153,12 +153,6 @@ export function getCore({id, code, sections, size, vars} = {}) {
   return id ? res[0] : res;
 }
 
-/** @returns {string | {[remoteId:string]: styleId}}>} */
-export function getRemoteInfo(id) {
-  console.log('without-network: getRemoteInfo called, it is only a stub now', id);
-  return {};
-}
-
 /** @returns {Injection.Response} */
 export function getSectionsByUrl(url, {id, init, dark} = {}) {
   if (dark != null)
