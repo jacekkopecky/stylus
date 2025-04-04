@@ -460,7 +460,6 @@ module.exports = [
             ['csslint-mod/dist/csslint.js', 'csslint.js', true],
             ['csslint-mod/dist/parserlib.js', 'parserlib.js', true],
             ['stylelint-bundle', 'stylelint.js'],
-            ['less/dist/less.min.js', 'less.js'],
             ['stylus-lang-bundle/dist/stylus-renderer.min.js', 'stylus-lang.js'],
           ].map(([npm, to, babelize]) => ({
             from: require.resolve(npm),
