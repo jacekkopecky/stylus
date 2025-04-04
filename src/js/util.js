@@ -189,15 +189,6 @@ export function deepEqual(a, b, ignoredKeys) {
   return true;
 }
 
-/**
- * @param {string | URL | Request} url
- * @param {RequestInit} [opts]
- * @return {Promise<string>}
- */
-export async function fetchText(url, opts) {
-  return (await fetch(url, opts)).text();
-}
-
 /** A simple polyfill in case DOM storage is disabled in the browser */
 export let sessionStore = /*@__PURE__*/ new Proxy({}, {
   get(target, name) {
