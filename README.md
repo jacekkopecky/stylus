@@ -1,10 +1,10 @@
 # Stylus without network
 
-This is a fork of Stylus with all network interaction hopefully ripped out.
+This is a fork of [Stylus](https://github.com/openstyles/stylus) with all network interaction hopefully ripped out.
 
 The reason for creating this fork is to allow the use of Stylus with
 locally-created custom styles in places where browser extensions that
-sometimes do something over the network are banned.
+might exfiltrate data over the network are banned.
 
 It also removes other things that made the removal of the above easier:
 
@@ -54,6 +54,7 @@ The licenses of [external libraries](./vendor) used in this project or [modified
   - https://github.com/openstyles/stylus/issues/1955
   - manage.html doesn't show the styles when search is set?
 - [.] review all extension pages for stuff to remove
+- [ ] push to master so that github repo shows the right readme
 - [ ] see if we could remove required permissions
 - more code removals?
   - [ ] maybe remove firefox stuff, builds other than chrome?

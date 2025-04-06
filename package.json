@@ -1,10 +1,10 @@
 {
-  "name": "Stylus",
-  "version": "2.3.14",
+  "name": "Stylus-without-network",
+  "version": "0.0.1",
   "description": "Redesign the web with Stylus, a user styles manager",
   "license": "GPL-3.0-only",
-  "repository": "openstyles/stylus",
-  "author": "Stylus Team",
+  "repository": "jacekkopecky/stylus-without-network",
+  "author": "Stylus Team, Jacek Kopecky",
   "dependencies": {
     "@eight04/draggable-list": "^0.3.0",
     "codemirror": "5.65.10",
