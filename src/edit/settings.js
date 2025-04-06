@@ -5,7 +5,7 @@ import {setupLivePrefs} from '@/js/dom-util';
 import {templateCache, htmlToTemplate, template} from '@/js/localization';
 import {API} from '@/js/msg-api';
 import * as prefs from '@/js/prefs';
-import {debounce, t, tryURL} from '@/js/util';
+import {debounce, t} from '@/js/util';
 import editor from './editor';
 import {createHotkeyInput, helpPopup} from './util';
 import './settings.css';
@@ -39,16 +39,8 @@ function StyleSettings(ui) {
   const {style} = editor;
   const elAuto = ui.$('#config\\.autosave');
   const elSave = ui.$('#ss-save');
-  const elUpd = ui.$('#ss-updatable');
   const pendingSetters = new Map();
   const updaters = [
-    initCheckbox(elUpd, 'updatable', tryURL(style.updateUrl).href),
-    initInput('#ss-update-url', 'updateUrl', '', {
-      validate(el) {
-        elUpd.disabled = !el.value || !el.validity.valid;
-        return el.validity.valid;
-      },
-    }),
     initRadio('ss-scheme', 'preferScheme', 'none'),
     initArea('inclusions'),
     initArea('exclusions'),
@@ -77,10 +69,6 @@ function StyleSettings(ui) {
         el.rows = val.match(/^/gm).length + !val.endsWith('\n');
       },
     });
-  }
-
-  function initCheckbox(el, key, defVal) {
-    return initInput(el, key, Boolean(defVal), {dom: 'checked'});
   }
 
   function initInput(el, key, defVal, {

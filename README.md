@@ -53,7 +53,7 @@ The licenses of [external libraries](./vendor) used in this project or [modified
   - [x] report bug: Manage site styles breaks when all styles match
   - https://github.com/openstyles/stylus/issues/1955
   - manage.html doesn't show the styles when search is set?
-- [.] review all extension pages for stuff to remove
+- [x] review all extension pages for stuff to remove
 - [ ] push to master so that github repo shows the right readme
 - [ ] see if we could remove required permissions
 - more code removals?
