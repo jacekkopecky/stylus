@@ -26,7 +26,6 @@ const defaults = {
   'show-badge': true,             // display text on popup menu icon
   'styleViaASS': false,           // document.adoptedStyleSheets
   'styleViaXhr': false,           // early style injection to avoid FOUC
-  'urlInstaller': true,           // auto-open installer page for supported .user.css urls
   'windowPosition': {},           // detached window position
   'compactWidth': 850,
 
@@ -144,7 +143,6 @@ const defaults = {
   'popupWidth': 246,              // popup width in pixels
   'popupWidthMax': 280,           // popup width in pixels
 
-  'updateInterval': 24,           // user-style automatic update interval, hours (0 = disable)
   'updateOnlyEnabled': false,
 };
 const warnUnknown = console.warn.bind(console, 'Unknown preference "%s"');

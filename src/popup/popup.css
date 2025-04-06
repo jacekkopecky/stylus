@@ -79,9 +79,6 @@ body > div:not([id=message-box]/*avoiding # to keep specificity low*/):not(.colo
     content: attr(data-find);
     font-weight: bold;
   }
-  &:hover {
-    color: var(--accent-1);
-  }
 }
 
 .style-name:hover input:is(:checked, *) {

@@ -59,9 +59,6 @@ export function toggleUrlLink({type}) {
 }
 
 const GlobalRoutes = {
-  '#installed:empty'() {
-    $id('find-styles-btn').click();
-  },
   '#menu [data-cmd]'() {
     if (this.dataset.cmd === 'delete') {
       if (menu.classList.toggle('delete')) return;

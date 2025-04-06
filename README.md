@@ -49,9 +49,11 @@ The licenses of [external libraries](./vendor) used in this project or [modified
 - [x] remove transifex
 - [x] remove most locales
 - [x] remove find button, search.js etc?
-- [ ] fix "manage site styles" - the automatic search current doesn't work
+- [x] fix "manage site styles" - the automatic search current doesn't work
+  - [x] report bug: Manage site styles breaks when all styles match
+  - https://github.com/openstyles/stylus/issues/1955
   - manage.html doesn't show the styles when search is set?
-- [ ] review all extension pages for stuff to remove
+- [.] review all extension pages for stuff to remove
 - [ ] see if we could remove required permissions
 - more code removals?
   - [ ] maybe remove firefox stuff, builds other than chrome?
