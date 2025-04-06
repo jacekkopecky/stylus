@@ -137,20 +137,6 @@
       </div>
 
       <div class="filter-selection">
-        <label>
-          <input id="manage.onlyLocal" type="checkbox"
-                 data-filter=":not(.updatable):not(.update-done)"
-                 data-filter-hide=".updatable, .update-done">
-        </label>
-        <div class="select-wrapper">
-          <select id="manage.onlyLocal.invert" i18n="title:manageOnlyLocalTooltip" class="fit-width">
-            <option i18n="manageOnlyLocal" value="false"></option>
-            <option i18n="manageOnlyExternal" value="true"></option>
-          </select>
-        </div>
-      </div>
-
-      <div class="filter-selection">
       <template data-id="onlyUpdates">
         <label id="only-updates" i18n="+manageOnlyUpdates">
           <input type="checkbox"
@@ -195,13 +181,6 @@
         <summary></summary>
       </details>
       <main class="flex wrap center-items">
-        <button id="check-all-updates" i18n="title:checkAllUpdates" class="icon">
-          <i class=i-update-check></i>
-          <span id="update-progress"></span>
-        </button>
-        <button id="update-history-button" i18n="title:genericHistoryLabel" class="icon">
-          <i class=i-log></i>
-        </button>
         <button id="injection-order-button" i18n="title:styleInjectionOrder" class="icon">
           <i class=i-reorder></i>
         </button>
@@ -216,25 +195,6 @@
             <i class=i-plus></i>
           </button>
         </a>
-        <label id="add-style-as-usercss-wrapper" i18n="title:optionsAdvancedNewStyleAsUsercss">
-          <input type="checkbox" id="newStyleAsUsercss">
-          <i class=i-usercss></i>
-          <a id="usercss-wiki"
-             class="icon"
-             href="https://github.com/openstyles/stylus/wiki/Usercss"
-             i18n="title:externalUsercssDocument">
-            <i class=i-external></i>
-          </a>
-        </label>
-
-        <div id="update-all">
-          <template data-id="updateAll">
-            <button id="apply-all-updates" i18n="applyAllUpdates"></button>
-            <span id="update-all-no-updates" i18n="updateAllCheckSucceededNoUpdate"></span>
-            <button id="check-all-updates-force" i18n="checkAllUpdatesForce"></button>
-          </template>
-        </div>
-
 
         <div id="backup" class="flex wrap center-items">
           <button id="import" i18n="importLabel"></button>
@@ -259,7 +219,7 @@
         <summary></summary>
         <main>
           <a href="https://github.com/openstyles/stylus/wiki" target="_blank" i18n="linkGetHelp"></a>
-          <a href="https://github.com/openstyles/stylus" target="_blank">GitHub</a>
+          <a href="https://github.com/jacekkopecky/stylus-without-network" target="_blank">GitHub</a>
         </main>
       </details>
     </div>

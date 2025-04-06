@@ -10,7 +10,6 @@ import {browserWindows, getOwnTab} from '@/js/util-webext';
 import {filterAndAppend, showFiltersStats} from './filters';
 import {createStyleElement, createTargetsElement, renderFavs, updateTotal} from './render';
 import * as sorter from './sorter';
-import {checkUpdate, handleUpdateInstalled} from './updater-ui';
 import {installed, newUI, objectDiff, queue, styleToDummyEntry} from './util';
 
 for (const a of $$('#header a[href^="http"]')) a.onclick = openLink;
@@ -42,10 +41,6 @@ const ENTRY_ROUTES = {
   },
 
   '.homepage': openLink,
-
-  '.check-update'(event, entry) {
-    checkUpdate(entry, {single: true});
-  },
 
   '.update'(event, entry) {
     const json = entry.updatedCode;
@@ -190,9 +185,6 @@ function handleUpdate(style, {reason, method} = {}) {
     }
   } else {
     updateTotal(1);
-  }
-  if ((reason === 'update' || reason === 'install') && entry.matches('.updatable')) {
-    handleUpdateInstalled(entry, reason);
   }
   filterAndAppend({entry}).then(sorter.update);
   if (!entry.matches('.hidden') && reason !== 'import' && reason !== 'sync') {

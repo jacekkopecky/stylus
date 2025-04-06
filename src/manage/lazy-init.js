@@ -5,7 +5,6 @@ import {formatDate, formatRelativeDate} from '@/js/localization';
 import {debounce, t} from '@/js/util';
 import InjectionOrder from './injection-order';
 import * as router from './router';
-import UpdateHistory from './updater-ui';
 import {installed} from './util';
 import './events';
 import './import-export';
@@ -16,7 +15,6 @@ installed.on('mouseout', lazyAddEntryTitle, {passive: true});
 
 router.makeToggle('#manage-options-button, #sync-styles', 'stylus-options', toggleEmbeddedOptions);
 router.makeToggle('#injection-order-button', 'injection-order', InjectionOrder);
-router.makeToggle('#update-history-button', 'update-history', UpdateHistory);
 router.update();
 
 function addEntryTitle(link) {

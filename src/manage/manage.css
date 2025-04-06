@@ -163,10 +163,6 @@ h1 {
     border: none;
   }
 }
-#check-all-updates-force {
-  white-space: normal;
-  text-align: left;
-}
 #add-style {
   margin-right: 1em;
 }
@@ -446,64 +442,8 @@ button i {
 .disabled .disable,
 .enabled .enable,
 .empty #filters,
-#header:not(.filtered) #stats,
-#update-all:empty,
-.can-update .check-update,
-/* Updates not available */
-.no-update:not(.update-problem) .check-update,
-.update-done .check-update,
-/* Default, no update buttons */
-.updater-icons :is(.update, .check-update),
-/* Update check in progress */
-.checking-update .check-update {
+#header:not(.filtered) #stats {
   display: none;
-}
-
-/* Check update button for things that can */
-.updatable .check-update {
-  display: inline-block;
-}
-
-/* Updates available */
-.can-update {
-  .update {
-    display: inline-block;
-  }
-  &[data-details$="locally edited"] button.update:after {
-    content: "*";
-  }
-}
-
-#apply-all-updates:after {
-  content: " (" attr(data-value) ")";
-}
-
-#check-all-updates {
-  position: relative;
-}
-#update-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  opacity: .35;
-  .update-in-progress & {
-    background-color: currentColor;
-  }
-}
-
-#check-all-updates-force {
-  margin-top: 1ex;
-}
-
-#update-all-no-updates[data-skipped-edited="true"] {
-  font-weight: bold;
-}
-#update-all-no-updates[data-skipped-edited="true"]::after {
-  content: " " var(--updateAllCheckSucceededSomeEdited);
-  font-weight: normal;
-  display: block;
-  margin: .75em 0 .5em;
 }
 
 /* highlight updated/added styles */
@@ -657,13 +597,6 @@ button i {
   > button {
     margin: .5em 1.25em 0;
   }
-}
-
-.update-history {
-  font-size: 11px;
-  white-space: pre;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
 }
 
 #manage\.newUI\.sort {

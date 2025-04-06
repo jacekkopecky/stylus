@@ -97,7 +97,7 @@
     "description": "Text for Backup section's (i) in style manager"
   },
   "backupReminder": {
-    "message": "<b>Styles may be lost</b> due to power failure, bugs in the browser, personal mistake.<hr><b>Backup your data:</b> either configure \"Sync to cloud\" in the options or manually click the export button whenever you make significant changes or, preferably, set up automatic backup of all your data using a dedicated app.",
+    "message": "<b>Styles may be lost</b> due to power failure, bugs in the browser, personal mistake.<hr><b>Backup your data:</b> click the export button whenever you make significant changes.",
     "description": "Shown in the style manager. Text between <b> and </b> is in bold font, <hr> is just an empty line in-between to make the text more readable."
   },
   "bckpInstStyles": {
