@@ -21,12 +21,5 @@
   },
   "commands": {
     "_execute_action": {}
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["install-usercss.html"],
-      "matches": ["<all_urls>"],
-      "use_dynamic_url": false
-    }
-  ]
+  }
 }

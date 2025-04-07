@@ -339,7 +339,7 @@
     "description": "Label for the button to delete a style"
   },
   "description": {
-    "message": "Redesign the web with Stylus-without-network, a user styles manager cloned from Stylus. It allows you to create your own themes and skins for sites you use.",
+    "message": "Redesign the web with Stylus-without-network, a user styles manager. Create your own themes and skins for sites you use.",
     "description": "Extension description"
   },
   "disableAllStyles": {

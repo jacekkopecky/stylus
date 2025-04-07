@@ -1,5 +1,7 @@
 # To-do list
 
+- [.] publish the extension on MS Edge store, or Chrome store
+
 We might consider to do these things...
 
 - [ ] see if we could remove required permissions
