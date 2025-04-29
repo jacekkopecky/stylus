@@ -2,7 +2,7 @@
 
 We might consider to do these things...
 
-- [ ] add styles to shadow roots
+- [x] add styles to shadow roots
 - [ ] see if we could remove required permissions
 - more code removals?
   - [ ] maybe remove firefox stuff, builds other than chrome?
@@ -16,6 +16,8 @@ We might consider to do these things...
 - test them
 - commit
 - check everything `pnpm build-chrome-mv3 && pnpm lint && pnpm test`
+- update to-do list above
+- update changelog
 - update version `pnpm version <patch|minor|major>`
 - make a zip file `pnpm zip-chrome-mv3`
 - push everything with `git push && git push --tags`

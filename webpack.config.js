@@ -513,6 +513,7 @@ module.exports = [
   })),
 
   makeContentScript('apply.js'),
+  makeContentScript('shadow-roots.js'),
   makeLibrary('@/js/worker.js', undefined, {
     plugins: [new RawEnvPlugin({ENTRY: 'worker'})],
   }),
