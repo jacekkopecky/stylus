@@ -221,7 +221,7 @@ function getWorkerPort(url, onerror) {
   /** @type {SharedWorker|Worker} */
   let worker;
   if (SharedWorker) {
-    worker = new SharedWorker(url, 'Stylus');
+    worker = new SharedWorker(url, 'Stylus-without-network');
     if (onerror) worker.onerror = onerror;
     return worker.port;
   }

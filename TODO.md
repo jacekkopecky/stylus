@@ -1,10 +1,8 @@
 # To-do list
 
-- [.] publish the extension on MS Edge store, or Chrome store
-  - as of 2025-04-07 is under review
-
 We might consider to do these things...
 
+- [ ] add styles to shadow roots
 - [ ] see if we could remove required permissions
 - more code removals?
   - [ ] maybe remove firefox stuff, builds other than chrome?

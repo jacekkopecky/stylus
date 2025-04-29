@@ -35,7 +35,7 @@
       "19": "icon/19w.png",
       "38": "icon/38w.png"
     },
-    "default_title": "Stylus",
+    "default_title": "Stylus-without-network",
     "default_popup": "popup.html"
   },
   "default_locale": "en"
